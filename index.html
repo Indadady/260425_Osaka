@@ -75,13 +75,14 @@
     <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
         <nav class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
+                <!-- Logo & Badges Area -->
                 <div class="flex items-center gap-2 md:gap-3">
                     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker" class="h-6 md:h-8 w-auto">
-                    <!-- Group Name Badge -->
-                    <div class="bg-slate-800 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded shadow">
-                        아사모아
-                    </div>
+                    
+                    <!-- D-Day Badge (Next to Logo) -->
+                    <span id="d-day-badge" class="hidden bg-pink-600 text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-md animate-pulse">
+                        <!-- D-Day inserted by JS -->
+                    </span>
                 </div>
                 
                 <!-- Desktop Nav -->
@@ -122,7 +123,7 @@
                 </p>
 
                 <!-- 4대 핵심 포인트 -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mb-10">
+                <div id="highlights" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mb-10">
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center hover:bg-white/20 transition-all">
                         <i class="fa-solid fa-city text-yellow-300 text-2xl md:text-3xl mb-2"></i>
                         <span class="text-xs md:text-sm font-bold text-white">오사카/교토/나라/고베</span>
@@ -493,10 +494,29 @@
     <script>
         // 1. D-Day Logic (Target: 2026-04-25)
         function updateDday() {
+            const ddayBadge = document.getElementById('d-day-badge');
             const now = new Date().getTime();
             const start = new Date('2026-04-25T00:00:00').getTime();
             const end = new Date('2026-04-28T23:59:59').getTime();
-            // Badge removed from header, but keeping logic just in case needed
+            
+            // Calculate days remaining
+            const distance = start - now;
+            const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
+
+            if (ddayBadge) {
+                if (distance > 0) {
+                    ddayBadge.innerText = "D-" + days;
+                    ddayBadge.classList.remove('hidden');
+                } else if (now >= start && now <= end) {
+                    ddayBadge.innerText = "여행중";
+                    ddayBadge.classList.remove('hidden');
+                } else {
+                    // Trip ended
+                    ddayBadge.innerText = "여행종료";
+                    ddayBadge.classList.add('bg-slate-200', 'text-slate-500');
+                    ddayBadge.classList.remove('text-pink-600', 'bg-white', 'hidden', 'animate-pulse');
+                }
+            }
         }
         updateDday();
 
