@@ -92,6 +92,18 @@
         .marker-day2 { border-color: #10b981; } /* Green */
         .marker-day3 { border-color: #f59e0b; } /* Orange */
         .marker-day4 { border-color: #8b5cf6; } /* Purple */
+
+        /* 🌟 선이 스르륵 그려지는 애니메이션 CSS */
+        .animated-route-line {
+            stroke-dasharray: 4000;
+            stroke-dashoffset: 4000;
+            animation: drawLine 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased pb-20 md:pb-0">
@@ -307,7 +319,7 @@
             </div>
         </section>
 
-        <!-- 3. Interactive Map Overview (Replaced Grid with Leaflet Map) -->
+        <!-- 3. Interactive Map Overview -->
         <section id="map-section" class="py-16 bg-white border-b border-slate-100 relative z-0">
             <div class="container mx-auto px-4 max-w-5xl">
                 <div class="text-center mb-8">
@@ -709,7 +721,7 @@
             this.style.height = this.scrollHeight + 'px';
         });
 
-        // 6. Interactive Leaflet Map Logic
+        // 6. Interactive Leaflet Map Logic (Safe Animated Solid Lines)
         document.addEventListener('DOMContentLoaded', function() {
             // 지도 초기화 (오사카/간사이 지역 중심)
             var map = L.map('itinerary-map', { scrollWheelZoom: false }).setView([34.75, 135.3], 9);
@@ -767,7 +779,7 @@
                 let bounds = L.latLngBounds();
                 
                 // 일자별로 묶어서 선을 그리기 위함
-                const daysToDraw = selectedDay === 'all' ? [1, 2, 3, 4] : [parseInt(selectedDay)];
+                const daysToDraw = selectedDay === 'all' ? [1, 2, 3, 4] : [parseInt(selectedDay, 10)];
 
                 daysToDraw.forEach(day => {
                     const dayLocs = locations.filter(loc => loc.day === day);
@@ -788,13 +800,28 @@
                         }
                     });
 
-                    // 점선으로 동선 그리기
-                    L.polyline(latlngs, {
-                        color: color,
-                        weight: 3,
-                        dashArray: '5, 10',
-                        opacity: 0.8
-                    }).addTo(linesLayer);
+                    // 경로를 그릴 수 있는 2개 이상의 좌표가 있을 경우에만 선을 그림
+                    if(latlngs.length > 1) {
+                        // 1. 하얀색 배경 실선 (가독성을 높여주고 애니메이션 적용)
+                        L.polyline(latlngs, {
+                            color: '#ffffff',
+                            weight: 7,
+                            opacity: 0.9,
+                            className: 'animated-route-line',
+                            lineCap: 'round',
+                            lineJoin: 'round'
+                        }).addTo(linesLayer);
+
+                        // 2. 컬러 실선 (실제 애니메이션 경로)
+                        L.polyline(latlngs, {
+                            color: color,
+                            weight: 4,
+                            opacity: 1.0,
+                            className: 'animated-route-line',
+                            lineCap: 'round',
+                            lineJoin: 'round'
+                        }).addTo(linesLayer);
+                    }
                 });
 
                 // 지도 영역 맞춤
@@ -824,7 +851,7 @@
                 });
             });
             
-            // Fix map issue inside hidden tabs (if it ever gets placed inside a hidden tab)
+            // Fix map issue inside hidden tabs
             setTimeout(() => { map.invalidateSize(); }, 500);
         });
     </script>
