@@ -71,7 +71,7 @@
             * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; print-color-adjust: exact !important; }
             body { background: white !important; color: black !important; font-size: 11px !important; }
             
-            /* 일정표 외 모든 웹 전용 UI 완전히 숨김 */
+            /* 숨길 요소들 */
             header, footer, #home, #guide, #must-read, #map-section, .bg-slate-900, #assistant, .no-print, .tab-btn-container, .mobile-nav { display: none !important; }
             
             /* 메인 영역 및 타임라인 여백 초기화 */
@@ -95,7 +95,7 @@
             /* 일자별 탭 모두 펼침 & 여백 극한 압축 */
             .tab-content { display: block !important; opacity: 1 !important; border: 1px solid #ddd !important; padding: 8px 12px !important; margin-bottom: 8px !important; border-radius: 6px !important; page-break-inside: avoid; box-shadow: none !important; background: #fff !important; }
             
-            /* 타임라인 일차 헤더 (1일차, 2일차...) */
+            /* 타임라인 일차 헤더 */
             .tab-content > div.flex { margin-bottom: 6px !important; padding-bottom: 4px !important; border-bottom: 1px solid #eee !important; }
             .tab-content h3 { font-size: 12px !important; font-weight: bold !important; color: #000 !important; margin: 0 !important; }
             
@@ -107,16 +107,24 @@
             /* 동그라미 마커 크기 및 위치 축소 */
             .tab-content li .absolute { left: -19px !important; top: 4px !important; width: 7px !important; height: 7px !important; }
             
-            /* 텍스트 크기 튜닝 (A4 가독성) */
+            /* 텍스트 크기 튜닝 */
             p.text-slate-800.font-bold { font-size: 11px !important; color: #000 !important; margin-bottom: 1px !important; }
             p.text-sm { font-size: 10px !important; color: #333 !important; }
             p.text-xs { font-size: 9px !important; color: #555 !important; margin-top: 0 !important; }
             span.text-sm { font-size: 11px !important; color: #000 !important; }
             span.text-xs { font-size: 10px !important; color: #444 !important; }
             
-            /* 식사 뱃지 간소화 (잉크 낭비 방지) */
+            /* 식사 뱃지 간소화 */
             .bg-blue-100, .bg-green-100, .bg-orange-100, .bg-purple-100 { background: transparent !important; border: 1px solid #999 !important; color: #333 !important; padding: 1px 4px !important; font-size: 9px !important; }
+
+            /* 🖨️ 인쇄 전용 메모장 (여백 줄) 표시 */
+            .print-notes-section { display: block !important; margin-top: 15px; border-top: 2px dashed #ccc; padding-top: 10px; }
+            .print-notes-section h4 { font-size: 12px; font-weight: bold; margin-bottom: 10px; color: #333; }
+            .print-note-line { border-bottom: 1px solid #eee; height: 20px; width: 100%; margin-bottom: 5px; }
         }
+        
+        /* 웹에서는 인쇄용 메모장 숨김 */
+        .print-notes-section { display: none; }
     </style>
 </head>
 <body class="antialiased pb-20 md:pb-0 relative">
@@ -254,92 +262,102 @@
                 <div class="text-center mb-10">
                     <span class="text-red-500 font-bold tracking-wider text-sm no-print"><i class="fa-solid fa-triangle-exclamation mr-1"></i> MUST READ</span>
                     <h2 class="text-2xl md:text-3xl font-bold mt-2 text-slate-800">첫 해외여행 필독 가이드</h2>
-                    <p class="text-slate-500 text-sm mt-2 no-print">출발 전 반드시 확인하셔서 불이익을 당하지 않도록 주의해 주세요.</p>
+                    <p class="text-slate-500 text-sm mt-2 no-print">출발 전 반드시 확인하셔서 현지에서 당황하시는 일이 없도록 주의해 주세요.</p>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Baggage Rules -->
-                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-                        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-suitcase-rolling text-blue-600 no-print"></i> 공항 압수 1순위! 수하물 규정</h3>
-                        <p class="text-sm font-bold text-blue-800 mb-4 bg-blue-100 p-2 rounded">항공사 기준: 기내용(들고타는 짐) 10kg 1개 / 위탁용(부치는 짐) 15kg 1개</p>
-                        
-                        <div class="space-y-4">
-                            <!-- Rule 1 -->
-                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                                <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
-                                    <span>🔋 보조배터리 / 무선이어폰</span>
-                                    <div class="flex gap-2 text-xs"><span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">기내 O</span><span class="text-red-500 font-bold bg-red-50 px-2 py-1 rounded">위탁 X</span></div>
+                    
+                    <!-- [Left Column 1] Baggage Rules -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-suitcase-rolling text-blue-600 no-print"></i> 공항 압수 1순위! 수하물 규정</h3>
+                        <p class="text-xs font-bold text-blue-800 mb-3 bg-blue-100 p-2 rounded">기내용(들고타는 짐) 10kg / 위탁용(부치는 짐) 15kg</p>
+                        <div class="space-y-3">
+                            <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 text-sm mb-1 flex items-center justify-between">
+                                    <span>🔋 보조배터리 / 라이터(1개)</span>
+                                    <div class="flex gap-1 text-[10px]"><span class="text-blue-600 font-bold bg-blue-50 px-1.5 py-0.5 rounded">기내 O</span><span class="text-red-500 font-bold bg-red-50 px-1.5 py-0.5 rounded">위탁 X</span></div>
                                 </h4>
-                                <p class="text-xs text-slate-600">휴대폰 충전용 보조배터리 등은 <strong>반드시 본인이 직접 비행기에 들고 타셔야</strong> 합니다. 캐리어에 넣고 부치면 공항 검색대에서 가방을 다시 열어야 합니다!</p>
+                                <p class="text-[11px] text-slate-600">스마트폰 보조배터리, 전자담배, 라이터는 <strong>반드시 기내에 직접 들고 타야</strong> 합니다. 큰 캐리어에 넣으면 공항에서 가방을 열어야 합니다.</p>
                             </div>
-                            <!-- Rule 2 -->
-                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                                <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
+                            <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 text-sm mb-1 flex items-center justify-between">
                                     <span>🧴 화장품 / 액체류 / 젤류</span>
-                                    <div class="flex gap-2 text-xs"><span class="text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded">기내 ⚠️</span><span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">위탁 O</span></div>
+                                    <div class="flex gap-1 text-[10px]"><span class="text-orange-500 font-bold bg-orange-50 px-1.5 py-0.5 rounded">기내 ⚠️</span><span class="text-blue-600 font-bold bg-blue-50 px-1.5 py-0.5 rounded">위탁 O</span></div>
                                 </h4>
-                                <p class="text-xs text-slate-600">스킨, 로션, 치약 등은 <strong>가급적 모두 큰 캐리어(위탁)에 넣으세요.</strong> 꼭 들고 타야 한다면 100ml 이하 용기에 담아 1L 투명 지퍼백 1개에만 허용됩니다.</p>
-                            </div>
-                            <!-- Rule 3 -->
-                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                                <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
-                                    <span>🚬 라이터 / 전자담배</span>
-                                    <div class="flex gap-2 text-xs"><span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">기내 O</span><span class="text-red-500 font-bold bg-red-50 px-2 py-1 rounded">위탁 X</span></div>
-                                </h4>
-                                <p class="text-xs text-slate-600">일반 라이터는 <strong>1인당 딱 1개만 몸에 지니고</strong> 탈 수 있습니다. 전자담배 기기 역시 무조건 들고 타야 하며, 위탁 수하물에 넣으면 압수됩니다.</p>
+                                <p class="text-[11px] text-slate-600">스킨, 로션 등 액체류는 <strong>큰 캐리어(위탁수하물)에 넣어서 부치세요.</strong> 기내 반입 시 100ml 이하만 가능합니다.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-6">
-                        <!-- Local Tips & Calculator -->
-                        <div class="bg-gradient-to-br from-pink-50 to-orange-50 rounded-2xl p-6 border border-pink-100">
-                            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-won-sign text-pink-600 no-print"></i> 현지 물가 & 환율 팁</h3>
-                            
-                            <div class="bg-white p-4 rounded-xl shadow-sm mb-4">
-                                <h4 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-bottle-droplet text-green-600 mr-1 no-print"></i> 한국 소주는 1만 원?</h4>
-                                <p class="text-xs text-slate-600 leading-relaxed mb-2">일본 식당에서 참이슬/처음처럼은 약 800¥~1,000¥(약 1만원)으로 매우 비쌉니다. 대신 <strong>현지 생맥주(나마비루)나 하이볼, 사케</strong>는 한 잔에 약 4~5천 원으로 저렴하니 현지 주류를 즐겨보세요!</p>
-                            </div>
+                    <!-- [Right Column 1] Duty Free & Etiquette -->
+                    <div class="bg-indigo-50 rounded-2xl p-5 border border-indigo-100">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-gift text-indigo-600 no-print"></i> 귀국 세관 규정 & 현지 매너</h3>
+                        
+                        <div class="bg-white p-3 rounded-xl shadow-sm mb-3">
+                            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-wine-bottle text-indigo-500 mr-1 no-print"></i> 한국 입국 시 면세 한도</h4>
+                            <p class="text-[11px] text-slate-600 leading-relaxed">
+                                • <strong>기본 면세:</strong> 미화 800달러 이하<br>
+                                • <strong>주류:</strong> <span class="text-red-500 font-bold">2병 (합산 2L 이하, 미화 400달러 이하)</span><br>
+                                • <strong>담배:</strong> 1보루 (200개비) / <strong>향수:</strong> 60ml
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100">
+                            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-handshake-angle text-emerald-500 mr-1 no-print"></i> 일본 여행 기본 에티켓</h4>
+                            <p class="text-[11px] text-slate-600 leading-relaxed">
+                                • <strong>노 팁(No Tip):</strong> 식당이나 호텔에 팁을 두고 나오지 마세요.<br>
+                                • <strong>오사카 에스컬레이터:</strong> 도쿄/한국과 반대로 <span class="text-blue-600 font-bold">우측에 서고 좌측을 비워둡니다.</span><br>
+                                • 대중교통 내 통화 자제 및 식당 외부 음식 반입 금지
+                            </p>
+                        </div>
+                    </div>
 
-                            <div class="bg-white p-4 rounded-xl shadow-sm border-2 border-pink-200 no-print">
-                                <p class="text-xs font-bold text-pink-600 mb-2">실시간 환율 계산기 (100엔 = 약 955원)</p>
-                                <div class="flex items-center gap-3">
-                                    <div class="relative flex-1">
-                                        <input type="number" id="jpy-input" placeholder="엔화 입력" oninput="calcKRW()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-lg font-bold rounded-lg px-4 py-2 pr-8 text-right focus:outline-none focus:border-pink-400">
-                                        <span class="absolute right-3 top-2.5 text-slate-400 font-bold">¥</span>
-                                    </div>
-                                    <i class="fa-solid fa-arrow-right-arrow-left text-slate-400"></i>
-                                    <div class="flex-1 bg-pink-600 text-white rounded-lg px-4 py-2 text-right">
-                                        <span id="krw-output" class="text-lg font-bold">0</span> <span class="text-sm">원</span>
-                                    </div>
+                    <!-- [Left Column 2] Calculator & Prices -->
+                    <div class="bg-gradient-to-br from-pink-50 to-orange-50 rounded-2xl p-5 border border-pink-100">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-won-sign text-pink-600 no-print"></i> 현지 물가 & 환율 팁</h3>
+                        
+                        <div class="bg-white p-3 rounded-xl shadow-sm mb-3 border-2 border-pink-200 no-print">
+                            <p id="exchange-rate-display" class="text-[11px] font-bold text-pink-600 mb-2">실시간 환율 불러오는 중...</p>
+                            <div class="flex items-center gap-2">
+                                <div class="relative flex-1">
+                                    <input type="number" id="jpy-input" placeholder="엔화 입력" oninput="calcKRW()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-bold rounded-lg px-2 py-2 pr-6 text-right focus:outline-none focus:border-pink-400">
+                                    <span class="absolute right-2 top-2 text-slate-400 font-bold text-sm">¥</span>
+                                </div>
+                                <i class="fa-solid fa-arrow-right-arrow-left text-slate-400 text-xs"></i>
+                                <div class="flex-1 bg-pink-600 text-white rounded-lg px-2 py-2 text-right">
+                                    <span id="krw-output" class="text-sm font-bold">0</span> <span class="text-xs">원</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Dynamic Weather Guide -->
-                        <div class="bg-slate-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
-                            <i class="fa-solid fa-cloud-sun absolute -right-4 -top-4 text-7xl opacity-10 no-print"></i>
-                            
-                            <div class="flex justify-between items-start mb-4">
-                                <h3 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-temperature-half text-yellow-400 no-print"></i> 오사카 실시간 날씨</h3>
-                                <span id="current-weather-status" class="text-xs bg-slate-700 px-2 py-1 rounded no-print">업데이트 중...</span>
-                            </div>
+                        <div class="bg-white p-3 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-bottle-droplet text-green-600 mr-1 no-print"></i> 한국 소주는 1만 원?</h4>
+                            <p class="text-[11px] text-slate-600 leading-relaxed">일본 식당에서 참이슬은 약 800¥~1,000¥으로 매우 비쌉니다. 대신 <strong>현지 생맥주(나마비루)나 하이볼, 사케</strong>는 약 4~5천 원으로 저렴하니 현지 주류를 즐겨보세요!</p>
+                        </div>
+                    </div>
 
-                            <!-- 4월 25일 날씨 팁 (고정 안내) -->
-                            <div class="bg-yellow-400/20 border border-yellow-400/30 p-4 rounded-xl mb-5">
-                                <p class="text-sm font-bold text-yellow-300 mb-2">🌸 4월 하순(4/25경) 옷차림 팁</p>
-                                <p class="text-xs text-slate-200 leading-relaxed">
-                                    평균 기온 11°C ~ 21°C로 한국의 따뜻한 봄과 비슷합니다.<br>
-                                    낮에는 포근하지만 <strong>아침저녁(일교차 10도 이상)</strong>이나 항구(고베)에서는 체감온도가 크게 떨어집니다. <strong class="text-yellow-300">얇은 겉옷 여러 겹(레이어드)과 편한 운동화</strong>를 강력 추천합니다.
-                                </p>
-                            </div>
-                            
-                            <!-- 7-Day Forecast UI (Dynamic) -->
-                            <div class="no-print">
-                                <p class="text-[10px] text-slate-400 mb-1">이번 주 오사카 주간 예보 (실시간)</p>
-                                <div id="weather-forecast-container" class="bg-slate-900/50 rounded-xl p-3 border border-slate-600 overflow-x-auto no-scrollbar flex gap-3 min-w-max">
-                                    <!-- JS will populate this -->
-                                </div>
+                    <!-- [Right Column 2] Dynamic Weather Guide -->
+                    <div class="bg-slate-800 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+                        <i class="fa-solid fa-cloud-sun absolute -right-4 -top-4 text-7xl opacity-10 no-print"></i>
+                        
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-temperature-half text-yellow-400 no-print"></i> 오사카 실시간 날씨</h3>
+                            <span id="current-weather-status" class="text-[10px] bg-slate-700 px-2 py-1 rounded no-print">업데이트 중...</span>
+                        </div>
+
+                        <!-- 4월 25일 날씨 팁 (고정 안내) -->
+                        <div class="bg-yellow-400/20 border border-yellow-400/30 p-3 rounded-xl mb-4">
+                            <p class="text-sm font-bold text-yellow-300 mb-1">🌸 4월 하순(4/25경) 옷차림 팁</p>
+                            <p class="text-[11px] text-slate-200 leading-relaxed">
+                                낮에는 포근하지만 <strong>아침저녁(일교차 10도 이상)</strong>이나 항구에서는 체감온도가 크게 떨어집니다. <strong class="text-yellow-300">가디건/바람막이 등 얇은 겉옷 겹쳐입기</strong>와 <strong>편한 운동화</strong>를 강력 추천합니다.
+                            </p>
+                        </div>
+                        
+                        <!-- 7-Day Forecast UI (Dynamic) -->
+                        <div class="no-print">
+                            <p class="text-[10px] text-slate-400 mb-1">이번 주 오사카 주간 예보 (실시간)</p>
+                            <div id="weather-forecast-container" class="bg-slate-900/50 rounded-xl p-2 border border-slate-600 overflow-x-auto no-scrollbar flex gap-2 min-w-max">
+                                <!-- JS will populate this -->
                             </div>
                         </div>
                     </div>
@@ -366,7 +384,10 @@
                 
                 <!-- 상단 제어부 (타이틀 + 버튼들) -->
                 <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b pb-4 border-slate-200">
-                    <h2 class="text-2xl font-bold text-slate-800 m-0 border-0">상세 일정표</h2>
+                    <div class="text-center md:text-left">
+                        <h2 class="text-2xl font-bold text-slate-800 m-0 border-0">상세 일정표</h2>
+                        <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-circle-info mr-1"></i> 현지 일정은 현지 사정에 따라 변동될 수 있습니다.</p>
+                    </div>
                     
                     <div class="flex flex-wrap justify-center gap-2 no-print">
                         <a href="https://www.modetour.com/package/97327471?MLoc=99&Pnum=97327471&ANO=7900804&sno=C1091311&thru=crs" target="_blank" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-sm transition-colors">
@@ -553,6 +574,15 @@
                             </li>
                         </ul>
                     </div>
+                    
+                    <!-- 🖨️ 인쇄 전용 메모장 (여백 줄) -->
+                    <div class="print-notes-section">
+                        <h4>📝 현지 연락처 및 개인 메모</h4>
+                        <div class="print-note-line"></div>
+                        <div class="print-note-line"></div>
+                        <div class="print-note-line"></div>
+                        <div class="print-note-line"></div>
+                    </div>
 
                 </div>
             </div>
@@ -568,7 +598,7 @@
 
                 <div class="grid md:grid-cols-2 gap-8">
                     <!-- Checklist -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 print-break-inside-avoid">
                         <div id="checklist-container" class="space-y-2"></div>
                     </div>
 
@@ -584,7 +614,7 @@
                                 <a href="tel:0335622551" class="font-bold text-pink-600">033-562-2551</a>
                             </div>
                         </div>
-                        <div>
+                        <div class="no-print">
                             <textarea id="travel-memo" class="notepad w-full p-4 text-slate-800 rounded-lg" placeholder="여권번호 등 메모 (자동저장)"></textarea>
                         </div>
                     </div>
@@ -671,10 +701,29 @@
         
         fetchOsakaWeather();
 
-        // 환율 계산기 로직
+        // 실시간 환율 API 연동 및 계산기 로직
+        let currentExchangeRate = 9.55; // 기본값 (API 실패 시 사용)
+
+        async function fetchExchangeRate() {
+            try {
+                // 실시간 환율 오픈 API 호출 (JPY 기준)
+                const response = await fetch('https://open.er-api.com/v6/latest/JPY');
+                const data = await response.json();
+                if(data && data.rates && data.rates.KRW) {
+                    currentExchangeRate = data.rates.KRW;
+                    const ratePer100 = Math.round(currentExchangeRate * 100);
+                    document.getElementById('exchange-rate-display').innerText = `실시간 환율 계산기 (100엔 = 약 ${ratePer100.toLocaleString()}원)`;
+                }
+            } catch (error) {
+                console.error("환율 API 연동 오류", error);
+                document.getElementById('exchange-rate-display').innerText = `실시간 환율 계산기 (100엔 = 약 955원)`;
+            }
+        }
+        fetchExchangeRate();
+
         function calcKRW() {
             const jpy = document.getElementById('jpy-input').value;
-            const krw = Math.round(jpy * 9.55);
+            const krw = Math.round(jpy * currentExchangeRate);
             document.getElementById('krw-output').innerText = krw > 0 ? krw.toLocaleString() : "0";
         }
 
@@ -704,7 +753,7 @@
         }
 
         // 체크리스트
-        const PREFIX = 'tm_Asamoa_Osaka_PrintOpt_20260425_'; 
+        const PREFIX = 'tm_Asamoa_Osaka_FinalPro_20260425_'; 
         const checklistData = [
             { id: 'pass', text: '여권 (만료일 6개월 이상, 서명란 싸인 필수)' },
             { id: 'visit', text: 'Visit Japan Web (QR코드 화면 캡쳐본)' },
