@@ -14,127 +14,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[아사모아] 오사카의 정석-전일관광 4일 (4/25 출발)</title>
     
-    <!-- 🚨 Open Graph: 카톡 공유시 보여질 썸네일 -->
     <meta property="og:title" content="[아사모아] 아침출발! 오사카/교토/나라/고베 4일">
-    <meta property="og:description" content="2026.04.25(토) 출발 | 아침 출발 꽉 찬 일정 | USJ 선택 가능">
+    <meta property="og:description" content="2026.04.25(토) 출발 | 꽉 찬 일정 | 필수 안내 및 상세 일정표">
     <meta property="og:image" content="https://images.unsplash.com/photo-1590559899731-a382839e5549?q=80&w=1200&auto=format&fit=crop">
     <meta property="og:url" content="https://tourmaker.kr">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nanum+Myeongjo:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
-    <!-- Leaflet CSS for Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <style>
-        body { 
-            font-family: 'Noto Sans KR', sans-serif; 
-            background-color: #f8fafc; 
-            color: #334155; 
-        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; color: #334155; }
         
-        /* Hero Background: Osaka Castle */
         .hero-bg-osaka { 
-            background: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1590559899731-a382839e5549?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1590559899731-a382839e5549?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover; background-position: center; background-attachment: fixed;
         } 
         
-        /* Navigation Active State */
         .nav-link.active { color: #db2777; font-weight: 700; border-bottom: 2px solid #db2777; }
-        
-        /* Interactive */
-        .hover-zoom { transition: transform 0.5s ease; }
-        .group:hover .hover-zoom { transform: scale(1.05); }
-
-        /* Notepad Style */
-        .notepad {
-            background-color: #fefce8; 
-            background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
-            background-size: 100% 2rem;
-            line-height: 2rem;
-            border-top: 6px solid #f59e0b;
-            overflow: hidden;
-            resize: none;
-            transition: height 0.2s ease-out;
-        }
-        
-        /* Scroll Anchor Offset */
         section { scroll-margin-top: 70px; }
-
-        /* Scrollbar Hide */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Animation */
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
 
-        /* Custom Map Marker Styling */
+        .notepad {
+            background-color: #fefce8; background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 100% 2rem; line-height: 2rem; border-top: 6px solid #f59e0b;
+            resize: none; transition: height 0.2s ease-out;
+        }
+
+        /* Map Marker CSS */
         .custom-marker {
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-            border: 3px solid;
-            transition: transform 0.2s;
+            background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); border: 3px solid; transition: transform 0.2s;
         }
         .custom-marker i { font-size: 14px; color: #475569; }
-        .marker-day1 { border-color: #3b82f6; } /* Blue */
-        .marker-day2 { border-color: #10b981; } /* Green */
-        .marker-day3 { border-color: #f59e0b; } /* Orange */
-        .marker-day4 { border-color: #8b5cf6; } /* Purple */
+        .marker-day1 { border-color: #3b82f6; } .marker-day2 { border-color: #10b981; }
+        .marker-day3 { border-color: #f59e0b; } .marker-day4 { border-color: #8b5cf6; }
 
-        /* 🌟 선이 스르륵 그려지는 애니메이션 CSS */
         .animated-route-line {
-            stroke-dasharray: 4000;
-            stroke-dashoffset: 4000;
+            stroke-dasharray: 4000; stroke-dashoffset: 4000;
             animation: drawLine 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
         }
-        @keyframes drawLine {
-            to {
-                stroke-dashoffset: 0;
-            }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        /* 🖨️ Print CSS - 완벽한 종이 출력을 위한 설정 */
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background-color: white !important; color: black !important; }
+            
+            /* 숨길 요소들 */
+            header, footer, .no-print, #map-section, iframe, .tab-btn-container, .print-btn, #assistant textarea, .mobile-nav { display: none !important; }
+            
+            /* 타임라인 탭 모두 보이게 처리 */
+            .tab-content { display: block !important; opacity: 1 !important; page-break-inside: avoid; margin-bottom: 25px; border: none !important; box-shadow: none !important; padding: 0 !important; }
+            
+            /* 여백 및 폰트 조정 */
+            main { padding: 0 !important; margin: 0 !important; }
+            section { padding: 15px 0 !important; page-break-after: auto; }
+            .hero-bg-osaka { background: white !important; min-height: auto !important; padding: 30px 0 !important; border-bottom: 2px solid #000; }
+            .hero-bg-osaka h1 { font-size: 28px !important; color: black !important; text-shadow: none !important; margin-bottom: 10px; }
+            .hero-bg-osaka p { color: black !important; background: transparent !important; padding: 0 !important; font-weight: bold; }
+            
+            /* 포함/불포함 내역 테두리 진하게 */
+            .border-blue-100, .border-pink-100 { border: 2px solid #ccc !important; }
+            
+            h2 { border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 15px; font-size: 20px !important; }
+            .bg-white { box-shadow: none !important; border: 1px solid #eee !important; }
         }
     </style>
 </head>
-<body class="antialiased pb-20 md:pb-0">
+<body class="antialiased pb-20 md:pb-0 relative">
 
     <!-- Header -->
-    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300 no-print">
         <nav class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo & Badges Area -->
                 <div class="flex items-center gap-2 md:gap-3">
                     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker" class="h-6 md:h-8 w-auto">
-                    
-                    <!-- D-Day Badge -->
-                    <span id="d-day-badge" class="hidden bg-pink-600 text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-md animate-pulse">
-                        <!-- D-Day inserted by JS -->
-                    </span>
+                    <span id="d-day-badge" class="hidden bg-pink-600 text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full shadow-md animate-pulse"></span>
                 </div>
                 
-                <!-- Desktop Nav -->
                 <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
                     <a href="#home" class="nav-link">홈</a>
-                    <a href="#guide" class="nav-link text-blue-600 font-bold">공항 미팅</a>
-                    <a href="#map-section" class="nav-link text-emerald-600 font-bold">동선지도</a>
-                    <a href="#timeline" class="nav-link">상세일정</a>
-                    <a href="#assistant" class="nav-link text-yellow-600 font-bold">체크리스트</a>
+                    <a href="#guide" class="nav-link">미팅안내</a>
+                    <a href="#must-read" class="nav-link text-red-600 font-bold">해외여행 필독</a>
+                    <a href="#timeline" class="nav-link text-blue-600 font-bold">상세일정</a>
                 </div>
 
-                <!-- Share Button -->
-                <button onclick="shareLink()" class="text-slate-500 hover:text-pink-600 transition-colors p-2 active:scale-90 transform">
-                    <i class="fa-solid fa-share-nodes text-xl"></i>
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="shareLink()" class="text-slate-500 hover:text-pink-600 transition-colors p-2 active:scale-90 transform" title="공유하기">
+                        <i class="fa-solid fa-share-nodes text-xl"></i>
+                    </button>
+                </div>
             </div>
         </nav>
     </header>
@@ -143,12 +122,9 @@
         <!-- 1. Hero Section -->
         <section id="home" class="hero-bg-osaka min-h-[85vh] flex items-center justify-center text-center px-4 relative scroll-mt-0">
             <div class="z-10 text-white max-w-5xl w-full animate-fade-in-up flex flex-col items-center">
-                
                 <div class="flex flex-col items-center gap-2 mb-4">
-                    <span class="bg-pink-600 text-white text-xs md:text-sm font-bold px-4 py-1.5 rounded-full shadow-lg border border-white/30 tracking-wide">
-                        아사모아 X 투어메이커
-                    </span>
-                    <p class="text-pink-200 font-medium text-sm md:text-base tracking-widest uppercase">Special Trip for ASAMOA</p>
+                    <span class="bg-pink-600 text-white text-xs md:text-sm font-bold px-4 py-1.5 rounded-full shadow-lg border border-white/30 tracking-wide no-print">아사모아 X 투어메이커</span>
+                    <p class="text-pink-200 font-medium text-sm md:text-base tracking-widest uppercase no-print">Special Trip for ASAMOA</p>
                 </div>
 
                 <h1 class="text-4xl md:text-6xl font-[Nanum Myeongjo] font-bold leading-tight text-white drop-shadow-xl mb-4">
@@ -159,715 +135,596 @@
                     2026.04.25 (토) - 04.28 (화) | <span class="text-yellow-300 font-bold">아침 출발 (티웨이항공)</span>
                 </p>
 
-                <!-- 4대 핵심 포인트 -->
-                <div id="highlights" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mb-10">
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center hover:bg-white/20 transition-all">
-                        <i class="fa-solid fa-sun text-yellow-300 text-2xl md:text-3xl mb-2"></i>
-                        <span class="text-xs md:text-sm font-bold text-white">아침 출발</span>
-                        <span class="text-[10px] text-slate-300">1일차부터 꽉 찬 일정</span>
+                <div id="highlights" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mb-10 no-print">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-sun text-yellow-300 text-2xl mb-2"></i>
+                        <span class="text-xs font-bold text-white">아침 출발</span><span class="text-[10px] text-slate-300">꽉 찬 일정</span>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center hover:bg-white/20 transition-all">
-                        <i class="fa-solid fa-ticket text-emerald-300 text-2xl md:text-3xl mb-2"></i>
-                        <span class="text-xs md:text-sm font-bold text-white">USJ 선택 가능</span>
-                        <span class="text-[10px] text-slate-300">유니버설 스튜디오 재팬</span>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-bus text-emerald-300 text-2xl mb-2"></i>
+                        <span class="text-xs font-bold text-white">편안한 전일관광</span><span class="text-[10px] text-slate-300">전용 버스</span>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center hover:bg-white/20 transition-all">
-                        <i class="fa-solid fa-city text-pink-300 text-2xl md:text-3xl mb-2"></i>
-                        <span class="text-xs md:text-sm font-bold text-white">간사이 4개 도시</span>
-                        <span class="text-[10px] text-slate-300">오사카/교토/나라/고베</span>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-city text-pink-300 text-2xl mb-2"></i>
+                        <span class="text-xs font-bold text-white">간사이 4대 도시</span><span class="text-[10px] text-slate-300">오사카/교토/나라/고베</span>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 md:p-4 flex flex-col items-center justify-center hover:bg-white/20 transition-all">
-                        <i class="fa-solid fa-user-tie text-blue-300 text-2xl md:text-3xl mb-2"></i>
-                        <span class="text-xs md:text-sm font-bold text-white">단독 행사</span>
-                        <span class="text-[10px] text-slate-300">전문 인솔가이드 동반</span>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-user-tie text-blue-300 text-2xl mb-2"></i>
+                        <span class="text-xs font-bold text-white">전문 케어</span><span class="text-[10px] text-slate-300">가이드 전일정 동행</span>
                     </div>
-                </div>
-
-                <div class="animate-bounce mt-4">
-                    <i class="fa-solid fa-chevron-down text-2xl text-white/70"></i>
                 </div>
             </div>
         </section>
 
         <!-- 2. Airport & VJW Guide -->
-        <section id="guide" class="py-20 bg-slate-50">
+        <section id="guide" class="py-16 bg-slate-50">
             <div class="container mx-auto px-4 max-w-6xl">
-                <div class="text-center mb-12">
-                    <span class="text-blue-600 font-bold tracking-wider uppercase text-sm">Meeting Point</span>
-                    <h2 class="text-3xl font-bold mt-2 text-slate-800">청주공항 미팅 & 탑승 준비</h2>
-                    <p class="text-pink-600 font-medium text-sm mt-2"><i class="fa-solid fa-circle-exclamation mr-1"></i> 항공편이 아침 출발로 변경되어 미팅 시간도 오전으로 당겨졌습니다.</p>
+                <div class="text-center mb-10">
+                    <span class="text-blue-600 font-bold tracking-wider uppercase text-sm no-print">Meeting Point</span>
+                    <h2 class="text-2xl md:text-3xl font-bold mt-2 text-slate-800">청주공항 미팅 안내</h2>
                 </div>
 
-                <!-- Grid Layout for Flights & VJW -->
                 <div class="grid lg:grid-cols-2 gap-8">
-                    
-                    <!-- Left Column: Departure & Return -->
-                    <div class="space-y-8">
-                        <!-- Part 1: Cheongju Departure -->
-                        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                    <!-- Flights -->
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                             <div class="bg-slate-800 p-4 text-white flex justify-between items-center">
-                                <h3 class="text-lg font-bold"><i class="fa-solid fa-plane-departure mr-2 text-yellow-400"></i>청주공항 (4/25 토)</h3>
-                                <span class="text-xs bg-yellow-400 text-slate-900 font-bold px-2 py-1 rounded">오전 08:20 집결</span>
+                                <h3 class="font-bold"><i class="fa-solid fa-plane-departure mr-2 text-yellow-400 no-print"></i>청주공항 (4/25 토)</h3>
+                                <span class="text-xs bg-yellow-400 text-slate-900 font-bold px-2 py-1 rounded no-print">오전 08:20 집결</span>
                             </div>
                             <div class="p-6">
-                                <div class="mb-6 rounded-xl overflow-hidden border border-slate-200 relative group">
-                                    <img src="https://tse3.mm.bing.net/th/id/OIP.Oe6tHNwc2t265tiIHFfPMQHaEG?w=474&h=474&c=7&p=0" alt="Cheongju Airport" class="w-full object-cover h-48 group-hover:scale-105 transition-transform duration-500">
-                                    <div class="absolute bottom-0 w-full bg-black/60 text-white text-xs p-2 text-center">
-                                        ▲ 청주국제공항 1층 2번 출구 앞
-                                    </div>
+                                <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 mb-6 print-border-dark">
+                                    <ul class="space-y-2 text-sm text-slate-700">
+                                        <li class="flex"><span class="font-bold w-16 shrink-0">일시</span><span>2026년 04월 25일 <strong class="text-red-600">오전 08:20</strong></span></li>
+                                        <li class="flex"><span class="font-bold w-16 shrink-0">장소</span><span>청주국제공항 1층 2번출구 앞 <strong class="text-slate-900">모두투어 카운터</strong></span></li>
+                                        <li class="flex"><span class="font-bold w-16 shrink-0">항공편</span><span>티웨이항공 (TW327) / 10:55 출발</span></li>
+                                    </ul>
                                 </div>
-
-                                <div class="space-y-4 text-sm text-slate-700">
-                                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                                        <p class="font-bold text-blue-800 text-sm mb-1"><i class="fa-solid fa-user-tie mr-1"></i> 전문 인솔가이드 동반</p>
-                                        <p class="text-xs text-blue-600 leading-relaxed">
-                                            아사모아 회원님들의 편안한 여행을 위해 전문 인솔자가 동반합니다.<br>
-                                            (10명 이상 출발 시 배정)
-                                        </p>
-                                        <div class="mt-2 pt-2 border-t border-blue-200 text-xs text-blue-700">
-                                            <i class="fa-solid fa-phone mr-1"></i> <strong>출발 2-3일 전 해피콜:</strong><br>
-                                            인솔자 배정 후 가이드가 회원님께 직접 연락드립니다.
-                                        </div>
-                                    </div>
-
-                                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                                        <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-clock text-yellow-600 mr-2"></i>미팅 정보</h4>
-                                        <ul class="space-y-2">
-                                            <li class="flex items-start">
-                                                <span class="font-bold w-16 shrink-0 text-slate-600">일시</span>
-                                                <span>2026년 04월 25일 <strong class="text-red-600">오전 08:20</strong></span>
-                                            </li>
-                                            <li class="flex items-start">
-                                                <span class="font-bold w-16 shrink-0 text-slate-600">장소</span>
-                                                <span>청주국제공항 1층 2번출구 앞 국제선도착 옆 <strong class="text-slate-900">모두투어 여행사카운터</strong></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="flex items-center justify-between border-b pb-2 pt-2">
-                                        <span class="text-slate-500 font-bold">항공편</span>
-                                        <span class="font-bold text-slate-800 text-right">티웨이항공 (TW327)</span>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-slate-500 font-bold">출발 시간</span>
-                                        <span class="font-bold text-slate-800">10:55 출발 <i class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> 12:40 오사카 도착</span>
-                                    </div>
+                                
+                                <!-- 가이드/인솔자 정보 명확히 수정 -->
+                                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 text-sm text-blue-800">
+                                    <p class="font-bold mb-2"><i class="fa-solid fa-user-tie mr-1"></i> 현지 가이드 및 인솔자 안내</p>
+                                    <ul class="space-y-2 text-xs leading-relaxed">
+                                        <li><strong class="text-blue-900 bg-blue-100 px-1 rounded">[가이드]</strong> 오사카 현지 공항 도착부터 전문 가이드가 전 일정 동행합니다.</li>
+                                        <li><strong class="text-blue-900 bg-blue-100 px-1 rounded">[인솔자]</strong> 최종 출발 인원이 <strong class="text-red-500 font-bold">15명 이상</strong>일 경우에만 한국 청주공항 미팅부터 전문 인솔자가 배정되어 함께 출발합니다.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Part 2: Return Flight -->
-                        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-                            <div class="bg-pink-700 p-4 text-white flex justify-between items-center">
-                                <h3 class="text-lg font-bold"><i class="fa-solid fa-plane-arrival mr-2 text-yellow-400"></i>귀국편 (4/28 화)</h3>
+
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="bg-pink-700 p-4 text-white">
+                                <h3 class="font-bold"><i class="fa-solid fa-plane-arrival mr-2 text-yellow-400 no-print"></i>귀국편 (4/28 화)</h3>
                             </div>
-                            <div class="p-6">
-                                <div class="space-y-6 relative border-l-2 border-pink-100 ml-3 pl-6 py-2">
-                                    <div class="relative">
-                                        <div class="absolute -left-[31px] top-0 w-4 h-4 bg-pink-500 rounded-full ring-4 ring-white"></div>
-                                        <h4 class="font-bold text-slate-800">오사카(KIX) 출발</h4>
-                                        <p class="text-sm font-bold text-pink-600 mt-1">13:40 (TW328)</p>
-                                    </div>
-                                    <div class="relative">
-                                        <div class="absolute -left-[31px] top-0 w-4 h-4 bg-blue-500 rounded-full ring-4 ring-white"></div>
-                                        <h4 class="font-bold text-slate-800">청주(CJJ) 도착</h4>
-                                        <p class="text-sm font-bold text-slate-600 mt-1">15:20 도착 예정</p>
-                                    </div>
-                                </div>
-                                <div class="mt-4 bg-slate-50 p-4 rounded-lg text-xs text-slate-500">
-                                    * 항공 스케줄은 항공사 사정에 의해 임의로 변경될 수 있습니다.<br>
-                                    * 단체 항공권이므로 사전 좌석 지정이 불가합니다.
-                                </div>
+                            <div class="p-6 text-sm text-slate-700">
+                                <p><strong>오사카(KIX) 출발:</strong> 13:40 (TW328)</p>
+                                <p class="mt-2"><strong>청주(CJJ) 도착:</strong> 15:20 도착 예정</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Visit Japan Web -->
-                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden h-fit sticky top-24">
+                    <!-- Visit Japan Web (Hide on print) -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden h-fit no-print">
                         <div class="bg-blue-600 p-4 text-white flex justify-between items-center">
-                            <h3 class="text-lg font-bold"><i class="fa-solid fa-qrcode mr-2 text-white"></i>Visit Japan Web 안내</h3>
+                            <h3 class="font-bold"><i class="fa-solid fa-qrcode mr-2"></i>Visit Japan Web 안내</h3>
                             <span class="text-xs bg-white/20 px-2 py-1 rounded">빠른 입국 심사</span>
                         </div>
                         <div class="p-6 flex flex-col items-center">
-                            <div class="bg-blue-50 p-4 rounded-xl text-center mb-6 w-full">
-                                <p class="text-sm text-slate-700 font-medium mb-2">일본 입국 수속을 QR코드 하나로!</p>
-                                <p class="text-xs text-slate-500">입국 심사 및 세관 신고를 모바일로 미리 작성하시면 공항에서 대기 시간을 크게 줄일 수 있습니다. (비행기 탑승 전 완료 권장)</p>
-                            </div>
-                            
-                            <!-- QR Placeholder -->
-                            <div class="border-2 border-dashed border-blue-200 p-4 rounded-2xl mb-6 bg-white shadow-sm flex flex-col items-center justify-center w-40 h-40">
-                                <i class="fa-solid fa-mobile-screen-button text-4xl text-blue-400 mb-2"></i>
-                                <span class="text-xs font-bold text-slate-500">모바일로 간편하게</span>
-                            </div>
-
-                            <a href="https://vjw-lp.digital.go.jp/ko/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md mb-4">
-                                <span>비짓재팬웹 등록 바로가기</span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                            <p class="text-sm text-slate-600 mb-4 text-center">모바일로 입국/세관 신고를 미리 작성하시면 대기 시간을 크게 줄일 수 있습니다.</p>
+                            <a href="https://vjw-lp.digital.go.jp/ko/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center gap-2 shadow-md">
+                                <span>비짓재팬웹 등록 바로가기</span><i class="fa-solid fa-arrow-up-right-from-square text-sm mt-0.5"></i>
                             </a>
-                            
-                            <div class="w-full border-t border-slate-100 pt-4">
-                                <p class="text-[11px] text-slate-400 leading-relaxed text-center">
-                                    * 필요 정보: 여권, 항공권 정보(<strong class="text-pink-500">티웨이항공 TW327</strong>), 호텔 주소<br>
-                                    * 동반 가족은 한 명의 계정으로 등록 가능합니다.<br>
-                                    * 발급된 QR코드는 미리 화면 캡쳐를 해두시면 데이터 연결 없이도 사용 가능합니다.
-                                </p>
+                            <p class="text-[11px] text-slate-400 mt-4 text-center">* 필요 정보: 여권, 항공권 정보(TW327), 호텔 주소<br>* 발급된 QR코드는 미리 화면 캡쳐 필수!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Must-Read Guide & Real-time Weather -->
+        <section id="must-read" class="py-16 bg-white border-y border-slate-200">
+            <div class="container mx-auto px-4 max-w-5xl">
+                <div class="text-center mb-10">
+                    <span class="text-red-500 font-bold tracking-wider text-sm no-print"><i class="fa-solid fa-triangle-exclamation mr-1"></i> MUST READ</span>
+                    <h2 class="text-2xl md:text-3xl font-bold mt-2 text-slate-800">첫 해외여행 필독 가이드</h2>
+                    <p class="text-slate-500 text-sm mt-2 no-print">출발 전 반드시 확인하셔서 불이익을 당하지 않도록 주의해 주세요.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Baggage Rules -->
+                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-suitcase-rolling text-blue-600 no-print"></i> 공항 압수 1순위! 수하물 규정</h3>
+                        <p class="text-sm font-bold text-blue-800 mb-4 bg-blue-100 p-2 rounded">항공사 기준: 기내용(들고타는 짐) 10kg 1개 / 위탁용(부치는 짐) 15kg 1개</p>
+                        
+                        <div class="space-y-4">
+                            <!-- Rule 1 -->
+                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
+                                    <span>🔋 보조배터리 / 무선이어폰</span>
+                                    <div class="flex gap-2 text-xs"><span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">기내 O</span><span class="text-red-500 font-bold bg-red-50 px-2 py-1 rounded">위탁 X</span></div>
+                                </h4>
+                                <p class="text-xs text-slate-600">휴대폰 충전용 보조배터리 등은 <strong>반드시 본인이 직접 비행기에 들고 타셔야</strong> 합니다. 캐리어에 넣고 부치면 공항 검색대에서 가방을 다시 열어야 합니다!</p>
+                            </div>
+                            <!-- Rule 2 -->
+                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
+                                    <span>🧴 화장품 / 액체류 / 젤류</span>
+                                    <div class="flex gap-2 text-xs"><span class="text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded">기내 ⚠️</span><span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">위탁 O</span></div>
+                                </h4>
+                                <p class="text-xs text-slate-600">스킨, 로션, 치약 등은 <strong>가급적 모두 큰 캐리어(위탁)에 넣으세요.</strong> 꼭 들고 타야 한다면 100ml 이하 용기에 담아 1L 투명 지퍼백 1개에만 허용됩니다.</p>
+                            </div>
+                            <!-- Rule 3 -->
+                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-2 flex items-center justify-between">
+                                    <span>🚬 라이터 / 전자담배</span>
+                                    <div class="flex gap-2 text-xs"><span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded">기내 O</span><span class="text-red-500 font-bold bg-red-50 px-2 py-1 rounded">위탁 X</span></div>
+                                </h4>
+                                <p class="text-xs text-slate-600">일반 라이터는 <strong>1인당 딱 1개만 몸에 지니고</strong> 탈 수 있습니다. 전자담배 기기 역시 무조건 들고 타야 하며, 위탁 수하물에 넣으면 압수됩니다.</p>
                             </div>
                         </div>
                     </div>
 
-                </div>
-            </div>
-        </section>
+                    <div class="space-y-6">
+                        <!-- Local Tips & Calculator -->
+                        <div class="bg-gradient-to-br from-pink-50 to-orange-50 rounded-2xl p-6 border border-pink-100">
+                            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-won-sign text-pink-600 no-print"></i> 현지 물가 & 환율 팁</h3>
+                            
+                            <div class="bg-white p-4 rounded-xl shadow-sm mb-4">
+                                <h4 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-bottle-droplet text-green-600 mr-1 no-print"></i> 한국 소주는 1만 원?</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-2">일본 식당에서 참이슬/처음처럼은 약 800¥~1,000¥(약 1만원)으로 매우 비쌉니다. 대신 <strong>현지 생맥주(나마비루)나 하이볼, 사케</strong>는 한 잔에 약 4~5천 원으로 저렴하니 현지 주류를 즐겨보세요!</p>
+                            </div>
 
-        <!-- 3. Interactive Map Overview -->
-        <section id="map-section" class="py-16 bg-white border-b border-slate-100 relative z-0">
-            <div class="container mx-auto px-4 max-w-5xl">
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl md:text-3xl font-bold mt-2 text-slate-800">한눈에 보는 여행 동선</h2>
-                    <p class="text-slate-500 text-sm mt-2">일자별 버튼을 클릭하여 그날의 주요 이동 동선을 상세히 확인해 보세요.</p>
-                </div>
-
-                <!-- Map Filter Buttons -->
-                <div class="flex justify-center flex-wrap gap-2 md:gap-3 mb-4" id="map-filters">
-                    <button class="map-btn bg-slate-800 text-white px-5 py-2 rounded-full text-sm font-bold shadow-md transition-all border-2 border-slate-800" data-day="all">전체 여정</button>
-                    <button class="map-btn bg-white text-slate-600 px-5 py-2 rounded-full text-sm font-bold shadow-sm transition-all border-2 border-slate-200 hover:border-blue-400" data-day="1">1일차</button>
-                    <button class="map-btn bg-white text-slate-600 px-5 py-2 rounded-full text-sm font-bold shadow-sm transition-all border-2 border-slate-200 hover:border-green-400" data-day="2">2일차</button>
-                    <button class="map-btn bg-white text-slate-600 px-5 py-2 rounded-full text-sm font-bold shadow-sm transition-all border-2 border-slate-200 hover:border-orange-400" data-day="3">3일차</button>
-                    <button class="map-btn bg-white text-slate-600 px-5 py-2 rounded-full text-sm font-bold shadow-sm transition-all border-2 border-slate-200 hover:border-purple-400" data-day="4">4일차</button>
-                </div>
-
-                <div class="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-6 px-2 text-[11px] md:text-sm">
-                    <div class="flex items-center gap-1.5"><div class="w-3 md:w-4 h-1 md:h-1.5 bg-blue-500 rounded"></div><span class="text-slate-600 font-medium">1일차 (오사카 집중)</span></div>
-                    <div class="flex items-center gap-1.5"><div class="w-3 md:w-4 h-1 md:h-1.5 bg-green-500 rounded"></div><span class="text-slate-600 font-medium">2일차 (나라/고베)</span></div>
-                    <div class="flex items-center gap-1.5"><div class="w-3 md:w-4 h-1 md:h-1.5 bg-orange-500 rounded"></div><span class="text-slate-600 font-medium">3일차 (교토)</span></div>
-                    <div class="flex items-center gap-1.5"><div class="w-3 md:w-4 h-1 md:h-1.5 bg-purple-500 rounded"></div><span class="text-slate-600 font-medium">4일차 (귀국)</span></div>
-                </div>
-
-                <!-- Leaflet Map Container -->
-                <div class="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 p-1 bg-white">
-                    <div id="itinerary-map" class="w-full h-[400px] md:h-[500px] rounded-xl z-0"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. Timeline -->
-        <section id="timeline" class="py-20 bg-slate-50">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">상세 일정표</h2>
-                    <p class="text-pink-600 text-sm mt-1">2일차는 [기본 일정]과 [USJ 선택 일정] 중 선택하실 수 있습니다.</p>
-                </div>
-
-                <!-- Tabs -->
-                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 max-w-3xl mx-auto px-1">
-                    <button class="tab-btn active flex-1 min-w-[80px] py-3 rounded-xl border border-blue-200 bg-white font-bold text-blue-600 text-sm" onclick="openTab(event, 'day1', 'blue')">1일차<br><span class="text-xs font-normal">4/25(토)</span></button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm relative" onclick="openTab(event, 'day2', 'green')">
-                        <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-bounce">선택</span>
-                        2일차<br><span class="text-xs font-normal">4/26(일)</span>
-                    </button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm" onclick="openTab(event, 'day3', 'orange')">3일차<br><span class="text-xs font-normal">4/27(월)</span></button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm" onclick="openTab(event, 'day4', 'purple')">4일차<br><span class="text-xs font-normal">4/28(화)</span></button>
-                </div>
-
-                <div class="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 min-h-[500px]">
-                    <!-- Day 1 (Blue) -->
-                    <div id="day1" class="tab-content animate-fade-in-up">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-lg text-blue-800">오사카 도착 및 전일 관광</h3>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold border border-blue-200">중/석식 포함</span>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border-2 border-pink-200 no-print">
+                                <p class="text-xs font-bold text-pink-600 mb-2">실시간 환율 계산기 (100엔 = 약 955원)</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="relative flex-1">
+                                        <input type="number" id="jpy-input" placeholder="엔화 입력" oninput="calcKRW()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-lg font-bold rounded-lg px-4 py-2 pr-8 text-right focus:outline-none focus:border-pink-400">
+                                        <span class="absolute right-3 top-2.5 text-slate-400 font-bold">¥</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right-arrow-left text-slate-400"></i>
+                                    <div class="flex-1 bg-pink-600 text-white rounded-lg px-4 py-2 text-right">
+                                        <span id="krw-output" class="text-lg font-bold">0</span> <span class="text-sm">원</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="space-y-6 border-l-2 border-blue-100 ml-2 pl-6">
+
+                        <!-- Dynamic Weather Guide -->
+                        <div class="bg-slate-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                            <i class="fa-solid fa-cloud-sun absolute -right-4 -top-4 text-7xl opacity-10 no-print"></i>
+                            
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-temperature-half text-yellow-400 no-print"></i> 오사카 실시간 날씨</h3>
+                                <span id="current-weather-status" class="text-xs bg-slate-700 px-2 py-1 rounded no-print">업데이트 중...</span>
+                            </div>
+
+                            <!-- 4월 25일 날씨 팁 (고정 안내) -->
+                            <div class="bg-yellow-400/20 border border-yellow-400/30 p-4 rounded-xl mb-5">
+                                <p class="text-sm font-bold text-yellow-300 mb-2">🌸 4월 하순(4/25경) 옷차림 팁</p>
+                                <p class="text-xs text-slate-200 leading-relaxed">
+                                    평균 기온 11°C ~ 21°C로 한국의 따뜻한 봄과 비슷합니다.<br>
+                                    낮에는 포근하지만 <strong>아침저녁(일교차 10도 이상)</strong>이나 항구(고베)에서는 체감온도가 크게 떨어집니다. <strong class="text-yellow-300">얇은 겉옷 여러 겹(레이어드)과 편한 운동화</strong>를 강력 추천합니다.
+                                </p>
+                            </div>
+                            
+                            <!-- 7-Day Forecast UI (Dynamic) -->
+                            <div class="no-print">
+                                <p class="text-[10px] text-slate-400 mb-1">이번 주 오사카 주간 예보 (실시간)</p>
+                                <div id="weather-forecast-container" class="bg-slate-900/50 rounded-xl p-3 border border-slate-600 overflow-x-auto no-scrollbar flex gap-3 min-w-max">
+                                    <!-- JS will populate this -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Video (No Print) -->
+        <section class="py-16 bg-slate-900 no-print">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-8 text-white">
+                    <h2 class="text-2xl font-bold">✨ 미리보는 아사모아의 여행</h2>
+                    <p class="text-slate-400 text-sm mt-1">천년의 고도 교토와 화려한 오사카를 영상으로 만나보세요.</p>
+                </div>
+                <div class="max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden shadow-2xl border border-slate-700 relative group">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/aPFCcvNwauE?start=5" title="Osaka Kyoto Travel" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Timeline (Text-based) -->
+        <section id="timeline" class="py-16 bg-white">
+            <div class="container mx-auto px-4 max-w-4xl">
+                
+                <!-- 상단 제어부 (타이틀 + 버튼들) -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b pb-4 border-slate-200">
+                    <h2 class="text-2xl font-bold text-slate-800 m-0 border-0">상세 일정표</h2>
+                    
+                    <div class="flex flex-wrap justify-center gap-2 no-print">
+                        <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors shadow-sm print-btn">
+                            <i class="fa-solid fa-print"></i> 일정표 인쇄
+                        </button>
+                        <a href="https://www.modetour.com/package/97327471?MLoc=99&Pnum=97327471&ANO=7900804&sno=C1091311&thru=crs" target="_blank" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-sm transition-colors">
+                            <i class="fa-solid fa-file-contract"></i> 모두투어 원문 확인
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 포함 / 불포함 내역 -->
+                <div class="grid md:grid-cols-2 gap-4 mb-10">
+                    <div class="bg-blue-50 p-5 rounded-xl border border-blue-100">
+                        <h3 class="font-bold text-blue-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-check no-print"></i> 포함 내역</h3>
+                        <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside ml-1">
+                            <li>왕복 항공권 및 유류할증료/제세공과금</li>
+                            <li>전 일정 숙박비 (2인 1실 기준)</li>
+                            <li>일정표 내 명시된 식사 (조/중/석식)</li>
+                            <li>전 일정 전용 차량 및 관광지 입장료</li>
+                            <li>최대 1억원 여행자 보험</li>
+                        </ul>
+                    </div>
+                    <div class="bg-pink-50 p-5 rounded-xl border border-pink-100">
+                        <h3 class="font-bold text-pink-800 mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-xmark no-print"></i> 불포함 내역</h3>
+                        <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside ml-1">
+                            <li><strong class="text-pink-600">가이드/기사 경비: 1인당 4,000엔 (현지 지불)</strong></li>
+                            <li>기타 개인 경비 (음료, 간식, 쇼핑 등)</li>
+                            <li>호텔 객실 팁 및 식당 매너팁</li>
+                            <li>싱글룸(독실) 사용 시 추가 비용</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tabs (Hidden on print) -->
+                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 px-1 tab-btn-container">
+                    <button class="tab-btn active flex-1 min-w-[80px] py-3 rounded-xl border border-blue-200 bg-blue-50 font-bold text-blue-600 text-sm shadow-sm" onclick="openTab(event, 'day1')">1일차<br><span class="text-xs font-normal">4/25(토)</span></button>
+                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day2')">2일차<br><span class="text-xs font-normal">4/26(일)</span></button>
+                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day3')">3일차<br><span class="text-xs font-normal">4/27(월)</span></button>
+                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day4')">4일차<br><span class="text-xs font-normal">4/28(화)</span></button>
+                </div>
+
+                <!-- Timeline Content -->
+                <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                    
+                    <!-- DAY 1 -->
+                    <div id="day1" class="tab-content animate-fade-in-up">
+                        <div class="flex items-center justify-between mb-6 border-b pb-2">
+                            <h3 class="font-bold text-lg text-blue-800">1일차 : 오사카 전일 관광</h3>
+                            <span class="text-xs font-bold text-slate-500">중식: 뷔페식 / 석식: 샤브샤브</span>
+                        </div>
+                        <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-4">
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full" style="print-color-adjust: exact;"></span>
                                 <span class="text-blue-600 font-bold text-sm">10:55</span>
-                                <p class="text-slate-800 font-medium">청주 출발 (TW327)</p>
+                                <p class="text-slate-800 font-bold">청주 출발 (TW327)</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
-                                <span class="text-blue-600 font-bold text-sm">12:40</span>
-                                <p class="text-slate-800 font-medium">오사카 간사이공항 도착 및 입국수속</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <span class="text-slate-600 font-bold text-sm">12:40</span>
+                                <p class="text-slate-800 font-bold">오사카 간사이공항 도착 및 가이드 미팅</p>
                                 <p class="text-xs text-slate-500 mt-1">(기사/가이드 경비 4,000엔 현지 지불)</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
                                 <p class="text-slate-800 font-bold text-blue-700">스미요시 타이샤</p>
-                                <p class="text-sm text-slate-600 mt-1">일본 3대 중요 문화재이자 가장 오래된 신사 중 하나 방문</p>
+                                <p class="text-sm text-slate-600 mt-1">일본 3대 국가 중요 문화재. 아름다운 아치형 다리와 고대 건축물 관람</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
                                 <p class="text-slate-800 font-bold text-blue-700">오사카성 (천수각 외부 조망)</p>
-                                <p class="text-sm text-slate-600 mt-1">도요토미 히데요시가 건설한 오사카의 상징이자 필수 관광 코스</p>
+                                <p class="text-sm text-slate-600 mt-1">일본 3대 명성 중 하나로 오사카의 상징적인 풍경 제공</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
                                 <p class="text-slate-800 font-bold text-blue-700">신사이바시 & 도톤보리</p>
-                                <p class="text-sm text-slate-600 mt-1">오사카 최대 번화가에서 화려한 네온사인과 자유 관광</p>
+                                <p class="text-sm text-slate-600 mt-1">오사카 최대 번화가에서 화려한 네온사인과 자유 관광 및 식사</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
-                                <p class="text-slate-800 font-medium">호텔 이동 및 투숙</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-600 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold">호텔 투숙 및 휴식</p>
                                 <p class="text-xs text-slate-500 mt-1">유 커뮤니티 호텔 (3성급) 또는 동급</p>
                             </li>
                         </ul>
                     </div>
-                    
-                    <!-- Day 2 (Green) - Split Itinerary -->
+
+                    <!-- DAY 2 -->
                     <div id="day2" class="tab-content hidden animate-fade-in-up">
-                        <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-xl mb-6">
-                            <h4 class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-code-branch text-yellow-600 mr-2"></i>일정 선택 안내 (출발 1주일 전까지 확정 요망)</h4>
-                            <p class="text-xs text-slate-600">행사 진행은 [호텔 <i class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> USJ(선택자 하차) <i class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> 나라/고베 관광 <i class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> USJ(선택자 합류) <i class="fa-solid fa-arrow-right mx-1 text-slate-400"></i> 호텔] 순서로 송영이 이루어집니다.</p>
+                        <div class="flex items-center justify-between mb-6 border-b pb-2">
+                            <h3 class="font-bold text-lg text-green-800">2일차 : 사슴의 나라 & 낭만 고베</h3>
+                            <span class="text-xs font-bold text-slate-500">조식: 호텔식 / 중식: 일정식 / 석식: 야키니쿠</span>
                         </div>
-
-                        <!-- Option A -->
-                        <div class="border-2 border-green-200 rounded-xl overflow-hidden mb-6">
-                            <div class="bg-green-50 p-3 border-b border-green-200 flex justify-between items-center">
-                                <h3 class="font-bold text-green-800">일정 A : 나라/고베 집중 관광 (기본 일정)</h3>
-                                <span class="text-xs bg-white text-green-700 px-2 py-1 rounded-full border border-green-300">추가 비용 없음</span>
-                            </div>
-                            <div class="p-4 md:p-5">
-                                <ul class="space-y-5 border-l-2 border-green-100 ml-2 pl-6">
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full"></span><p class="text-slate-800 font-bold">나라 사슴공원 & 동대사(도다이지)</p><p class="text-xs text-slate-600 mt-1">천여 마리의 사슴과 교감 / 세계문화유산인 거대한 목조 사찰 관람</p></li>
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full"></span><p class="text-slate-800 font-bold">기쿠마사무네 양조 기념관</p><p class="text-xs text-slate-600 mt-1">350년 전통의 일본 전통 양조 기술 관람</p></li>
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full"></span><p class="text-slate-800 font-bold">고베 메리켄 파크 & 하버랜드</p><p class="text-xs text-slate-600 mt-1">아름다운 항구 도시의 전경과 쇼핑, 야경 산책</p></li>
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full"></span><p class="text-slate-800 font-bold text-green-700">식사: 뷔페식(중식), 샤브샤브 무제한(석식)</p></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Option B -->
-                        <div class="border-2 border-pink-200 rounded-xl overflow-hidden">
-                            <div class="bg-pink-50 p-3 border-b border-pink-200 flex justify-between items-center">
-                                <h3 class="font-bold text-pink-800">일정 B : 유니버설 스튜디오 재팬 (USJ)</h3>
-                                <span class="text-xs bg-pink-600 text-white px-2 py-1 rounded-full font-bold shadow-sm">1인당 60,000원 추가</span>
-                            </div>
-                            <div class="p-4 md:p-5">
-                                <ul class="space-y-4 border-l-2 border-pink-200 ml-2 pl-6">
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-pink-500 rounded-full"></span><p class="text-slate-800 font-bold">USJ 전일 자유 관광</p>
-                                        <p class="text-xs text-slate-600 mt-1">해리포터, 닌텐도 월드(입장 확약권 개별 필요), 미니언즈 등</p>
-                                    </li>
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-300 rounded-full"></span><p class="text-slate-500 font-medium text-sm">중/석식 불포함 (파크 내 자유식)</p></li>
-                                    <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-300 rounded-full"></span>
-                                        <p class="text-xs text-slate-500 leading-relaxed">
-                                            * 가이드는 파크 내에 동반 입장하지 않습니다.<br>
-                                            * 익스프레스 패스(시간단축권)는 개별 구매하셔야 합니다.<br>
-                                            * 지정된 합류 시간(17시~18시) 외에 개별 이동 시 교통비는 본인 부담입니다.
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 pt-4 border-t border-slate-100">
-                            <ul class="space-y-4 border-l-2 border-green-100 ml-2 pl-6">
-                                <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full"></span><p class="text-slate-800 font-medium">합류 후 호텔 복귀 및 투숙 (연박)</p></li>
-                            </ul>
-                        </div>
+                        <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-4">
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold">호텔 조식 후 나라로 이동</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-green-700">나라 사슴공원 & 동대사(도다이지)</p>
+                                <p class="text-sm text-slate-600 mt-1">자유롭게 뛰노는 사슴들과 교감 및 세계 최대급 청동 불상이 있는 세계문화유산 관람</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-green-700">키쿠마사무네 양조 기념관</p>
+                                <p class="text-sm text-slate-600 mt-1">350년 전통의 일본 명문 양조장 견학</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-green-700">고베 메리켄 파크 & 하버랜드</p>
+                                <p class="text-sm text-slate-600 mt-1">아름다운 항구 공원과 복합 쇼핑몰에서 야경 산책</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-green-700">사키시마청사 전망대</p>
+                                <p class="text-sm text-slate-600 mt-1">지상 252m에서 오사카 시내와 바다를 360도로 조망 (휴무시 대관람차 대체)</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-600 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold">오사카 시내 호텔 투숙 (연박)</p>
+                            </li>
+                        </ul>
                     </div>
-                    
-                    <!-- Day 3 (Orange) -->
+
+                    <!-- DAY 3 -->
                     <div id="day3" class="tab-content hidden animate-fade-in-up">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-lg text-orange-800">교토 천년의 고도</h3>
-                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded font-bold border border-orange-200">조/중/석식 포함</span>
+                        <div class="flex items-center justify-between mb-6 border-b pb-2">
+                            <h3 class="font-bold text-lg text-orange-800">3일차 : 천년의 고도 교토</h3>
+                            <span class="text-xs font-bold text-slate-500">조: 호텔 / 중: 유두부정식 / 석: 일정식</span>
                         </div>
-                        <ul class="space-y-6 border-l-2 border-orange-100 ml-2 pl-6">
-                            <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span><p class="text-slate-800 font-medium">호텔 조식 후 교토로 이동</p></li>
+                        <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-4">
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span>
-                                <p class="text-slate-800 font-bold">청수사 (기요미즈데라)</p>
-                                <p class="text-sm text-slate-600 mt-1">아찔한 절벽 위에 세워진 본당과 아름다운 교토 시내 조망</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold">호텔 조식 후 교토로 이동</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span>
-                                <p class="text-slate-800 font-bold">산넨자카 & 니넨자카</p>
-                                <p class="text-sm text-slate-600 mt-1">옛 일본의 정취가 물씬 풍기는 돌계단 거리와 아기자기한 상점가 산책</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-orange-700">청수사 (기요미즈데라)</p>
+                                <p class="text-sm text-slate-600 mt-1">아찔한 절벽 위에 세워진 본당에서 교토 시내 절경 조망 (세계문화유산)</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span>
-                                <p class="text-slate-800 font-bold">아라시야마 관광</p>
-                                <p class="text-sm text-slate-600 mt-1">대나무 숲길 '치쿠린', 목조 다리 '도게츠교', 인연을 맺어주는 '노노미야 신사'</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-orange-700">니넨자카 & 산넨자카</p>
+                                <p class="text-sm text-slate-600 mt-1">전통 목조 건물과 아기자기한 상점들이 늘어선 옛 돌계단 거리 산책</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span>
-                                <p class="text-slate-800 font-bold text-orange-700">식사: 유두부 정식(중식), 일정식(석식)</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-orange-700">아라시야마 관광</p>
+                                <p class="text-sm text-slate-600 mt-1">대나무 숲길 '치쿠린', 목조 다리 '도게츠교', 인연의 '노노미야 신사'</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span>
-                                <p class="text-slate-800 font-medium">오사카 인근으로 이동 및 투숙</p>
-                                <p class="text-xs text-slate-500 mt-1">간사이 에어포트 워싱톤 호텔 (4성급) 또는 동급</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-600 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold">간사이 공항 인근 호텔 투숙</p>
+                                <p class="text-xs text-slate-500 mt-1">워싱톤 호텔 (4성급) 또는 동급</p>
                             </li>
                         </ul>
                     </div>
-                    
-                    <!-- Day 4 (Purple) -->
+
+                    <!-- DAY 4 -->
                     <div id="day4" class="tab-content hidden animate-fade-in-up">
-                        <h3 class="font-bold text-lg mb-4 text-purple-800">아쉬움을 뒤로하고 귀국</h3>
-                        <ul class="space-y-6 border-l-2 border-purple-100 ml-2 pl-6">
-                            <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span><p class="text-slate-800 font-medium">호텔 조식 후 체크아웃</p></li>
-                            <li class="relative"><span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span><p class="text-slate-800 font-medium">알렉산더앤선 면세점 방문 (약 40분 소요)</p></li>
+                        <div class="flex items-center justify-between mb-6 border-b pb-2">
+                            <h3 class="font-bold text-lg text-purple-800">4일차 : 아쉬움을 뒤로하고 귀국</h3>
+                            <span class="text-xs font-bold text-slate-500">조식: 호텔식</span>
+                        </div>
+                        <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-4">
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span>
-                                <p class="text-slate-800 font-medium">공항 셔틀버스로 간사이 국제공항 이동</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold">호텔 조식 후 체크아웃</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
+                                <p class="text-slate-800 font-bold text-purple-700">알렉산더앤선 면세점 방문</p>
+                                <p class="text-sm text-slate-600 mt-1">약 40분간 일본 특산품 및 기념품 쇼핑 시간</p>
+                            </li>
+                            <li class="relative">
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full" style="print-color-adjust: exact;"></span>
                                 <span class="text-purple-600 font-bold text-sm">13:40</span>
-                                <p class="text-slate-800 font-medium">오사카 간사이공항 출발 (TW328)</p>
+                                <p class="text-slate-800 font-bold">오사카(KIX) 출발 (TW328)</p>
                             </li>
                             <li class="relative">
-                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span>
-                                <span class="text-purple-600 font-bold text-sm">15:20</span>
-                                <p class="text-slate-800 font-medium">청주국제공항 도착 및 해산</p>
-                                <p class="text-sm text-slate-500 mt-1">즐거운 여행이 되셨기를 바랍니다.</p>
+                                <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full" style="print-color-adjust: exact;"></span>
+                                <span class="text-slate-600 font-bold text-sm">15:20</span>
+                                <p class="text-slate-800 font-bold">청주공항(CJJ) 도착 및 해산</p>
                             </li>
                         </ul>
                     </div>
+
                 </div>
             </div>
         </section>
 
         <!-- 6. Assistant -->
-        <section id="assistant" class="py-20 bg-slate-100">
-            <div class="container mx-auto px-4">
+        <section id="assistant" class="py-16 bg-slate-100">
+            <div class="container mx-auto px-4 max-w-5xl">
                 <div class="text-center mb-10">
-                    <h2 class="text-2xl font-bold text-slate-800">여행 체크리스트</h2>
-                    <p class="text-sm text-slate-500 mt-2">
-                        <i class="fa-solid fa-check text-pink-500 mr-1"></i> 빠짐없이 챙기셨나요?
-                    </p>
+                    <h2 class="text-2xl font-bold text-slate-800">여행 준비 체크리스트</h2>
+                    <p class="text-slate-500 text-sm mt-2 no-print">미리 준비하시어 편안한 여행 되시길 바랍니다.</p>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-8">
                     <!-- Checklist -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <div id="checklist-container" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 print-break-inside-avoid">
+                        <div id="checklist-container" class="space-y-2"></div>
                     </div>
 
                     <!-- Contact & Memo -->
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                             <h3 class="font-bold mb-4 text-slate-800">📞 비상 연락망</h3>
-                            <div class="bg-slate-50 p-3 rounded flex items-center justify-between mb-2">
+                            <div class="bg-slate-50 p-3 rounded flex items-center justify-between">
                                 <div>
                                     <p class="text-slate-500 text-xs mb-1">투어메이커 담당자</p>
                                     <span class="font-bold text-slate-800">이재명</span>
                                 </div>
-                                <a href="tel:0335622551" class="font-bold text-pink-600 text-lg">전화걸기</a>
+                                <a href="tel:0335622551" class="font-bold text-pink-600">033-562-2551</a>
                             </div>
                         </div>
-                        <div>
-                            <!-- Auto-resizing textarea -->
-                            <textarea id="travel-memo" class="notepad w-full p-4 text-slate-800 rounded-lg" placeholder="여권번호, 환전금액 등 중요한 정보를 메모하세요. 글을 길게 쓰면 창이 자동으로 늘어납니다."></textarea>
-                            <p id="save-status" class="text-right text-xs text-slate-400 mt-1">자동 저장됨</p>
+                        <div class="no-print">
+                            <textarea id="travel-memo" class="notepad w-full p-4 text-slate-800 rounded-lg" placeholder="여권번호 등 메모 (자동저장)"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
-        <!-- Bottom Nav (Mobile) -->
-        <div class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-200 flex justify-around py-3 z-50 text-[10px] text-slate-500 font-medium shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-            <a href="#home" class="flex flex-col items-center gap-1"><i class="fa-solid fa-house text-lg"></i>홈</a>
-            <a href="#map-section" class="flex flex-col items-center gap-1 text-emerald-600"><i class="fa-solid fa-map-location-dot text-lg"></i>지도</a>
-            <a href="#timeline" class="flex flex-col items-center gap-1"><i class="fa-regular fa-calendar-days text-lg"></i>일정</a>
-            <a href="#assistant" class="flex flex-col items-center gap-1 text-yellow-600"><i class="fa-solid fa-briefcase text-lg"></i>체크</a>
-        </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-12 text-center text-sm border-t border-slate-800 mb-14 md:mb-0">
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center text-sm border-t border-slate-800 no-print">
         <div class="container mx-auto px-4">
-            
-            <!-- Homepage Shortcut -->
-            <a href="https://tourmaker.kr" target="_blank" class="inline-block bg-pink-700 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full mb-8 transition-colors shadow-lg border border-pink-500">
-                <i class="fa-solid fa-globe mr-2"></i>투어메이커 공식 홈페이지 바로가기
+            <a href="https://tourmaker.kr" target="_blank" class="inline-block bg-pink-700 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full mb-8 transition-colors shadow-lg">
+                <i class="fa-solid fa-globe mr-2"></i>투어메이커 홈페이지
             </a>
-
-            <!-- Partner Logos -->
             <div class="flex justify-center items-center gap-6 mb-8 opacity-80">
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker" class="h-6 w-auto grayscale hover:grayscale-0 transition">
                 <span class="text-xl text-slate-600 font-light">|</span>
                 <span class="text-lg font-bold text-slate-300">MODETOUR</span>
             </div>
-
             <div class="max-w-2xl mx-auto space-y-2">
-                <p class="text-slate-500">
-                    본 상품은 모두투어와 제휴된 투어메이커가 판매 및 관리를 담당합니다.<br>
-                    여행문의: 주식회사 투어메이커 (033-562-2551)
-                </p>
-                <p class="text-[10px] text-slate-600 mt-4">
-                    &copy; 2026 Tourmaker. All Rights Reserved.
-                </p>
+                <p>본 상품은 모두투어와 제휴된 투어메이커가 판매 및 관리를 담당합니다.<br>여행문의: 주식회사 투어메이커 (033-562-2551)</p>
+                <p class="text-[10px] mt-4">&copy; 2026 Tourmaker. All Rights Reserved.</p>
             </div>
         </div>
-        
-        <!-- System Powered By Footer (Custom for Agencies) -->
         <div style="background-color: #f8f9fa; font-size: 12px; text-align: center; color: #6c757d; padding: 15px 0; margin-top: 30px; border-top: 1px solid #eaeaea;">
-            [System Powered by TOURMAKER] 본 스마트 가이드북은 <strong>모두투어</strong>의 기획과 <a href="https://tourmaker.kr" target="_blank" style="color: #6c757d; text-decoration: underline;">투어메이커</a>의 트래블 테크 기술 제휴로 제작되었습니다.
+            <a href="https://tourmaker.kr" target="_blank" style="color: #6c757d; text-decoration: none;">[System Powered by TOURMAKER] 본 스마트 가이드북은 <strong>모두투어</strong>의 기획과 투어메이커의 트래블 테크 기술 제휴로 제작되었습니다.</a>
         </div>
     </footer>
 
     <script>
-        // 1. D-Day Logic
-        function updateDday() {
-            const ddayBadge = document.getElementById('d-day-badge');
-            const now = new Date().getTime();
-            const start = new Date('2026-04-25T00:00:00').getTime();
-            const end = new Date('2026-04-28T23:59:59').getTime();
-            
-            const distance = start - now;
-            const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
+        // 날씨 API 연동 (Open-Meteo - 오사카)
+        async function fetchOsakaWeather() {
+            try {
+                // 오사카 위도/경도
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.6937&longitude=135.5022&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo');
+                const data = await response.json();
+                
+                // 현재 온도 업데이트
+                document.getElementById('current-weather-status').innerText = `현재: ${Math.round(data.current_weather.temperature)}°C`;
+                
+                const daily = data.daily;
+                const container = document.getElementById('weather-forecast-container');
+                container.innerHTML = '';
+                
+                const days = ['일', '월', '화', '수', '목', '금', '토'];
+                
+                // 오늘부터 7일간 예보 생성
+                for(let i=0; i<7; i++) {
+                    const date = new Date(daily.time[i]);
+                    const dayName = days[date.getDay()];
+                    const dateStr = `${date.getMonth()+1}/${date.getDate()}(${dayName})`;
+                    const maxT = Math.round(daily.temperature_2m_max[i]);
+                    const minT = Math.round(daily.temperature_2m_min[i]);
+                    const wCode = daily.weathercode[i];
+                    
+                    let iconClass = 'fa-cloud';
+                    let iconColor = 'text-slate-300';
+                    
+                    // WMO Weather code 해석 (간략화)
+                    if(wCode === 0) { iconClass = 'fa-sun'; iconColor = 'text-orange-400'; }
+                    else if(wCode >= 1 && wCode <= 3) { iconClass = 'fa-cloud-sun'; iconColor = 'text-yellow-300'; }
+                    else if(wCode >= 51 && wCode <= 67) { iconClass = 'fa-cloud-rain'; iconColor = 'text-blue-400'; }
+                    else if(wCode >= 71 && wCode <= 77) { iconClass = 'fa-snowflake'; iconColor = 'text-white'; }
+                    else if(wCode >= 80 && wCode <= 99) { iconClass = 'fa-cloud-showers-heavy'; iconColor = 'text-blue-500'; }
 
-            if (ddayBadge) {
-                if (distance > 0) {
-                    ddayBadge.innerText = "D-" + days;
-                    ddayBadge.classList.remove('hidden');
-                } else if (now >= start && now <= end) {
-                    ddayBadge.innerText = "여행중";
-                    ddayBadge.classList.remove('hidden');
-                } else {
-                    ddayBadge.innerText = "여행종료";
-                    ddayBadge.classList.add('bg-slate-200', 'text-slate-500');
-                    ddayBadge.classList.remove('text-pink-600', 'bg-white', 'hidden', 'animate-pulse');
+                    container.innerHTML += `
+                        <div class="flex flex-col items-center bg-slate-700/50 p-2 rounded-lg min-w-[50px]">
+                            <span class="text-[10px] text-slate-300 mb-1">${dateStr}</span>
+                            <i class="fa-solid ${iconClass} ${iconColor} text-lg mb-1"></i>
+                            <span class="text-[10px] font-bold">${minT}° <span class="text-slate-400">/</span> ${maxT}°</span>
+                        </div>
+                    `;
                 }
+            } catch (error) {
+                console.error("날씨 API 호출 실패", error);
+                document.getElementById('current-weather-status').innerText = "날씨 연동 오류";
+                document.getElementById('weather-forecast-container').innerHTML = '<p class="text-xs text-slate-400 p-2">날씨 정보를 불러올 수 없습니다.</p>';
             }
         }
-        updateDday();
+        
+        fetchOsakaWeather();
 
-        // 2. Share Function
-        function shareLink() {
-            const url = window.location.href;
-            if (navigator.share) {
-                navigator.share({
-                    title: '[아사모아] 아침출발 오사카 4일',
-                    text: '항공 스케줄이 변경된 확정 안내서입니다. 꼭 확인해주세요.',
-                    url: url
-                }).catch(console.error);
-            } else {
-                let textArea = document.createElement("textarea");
-                textArea.value = url;
-                textArea.style.position = "fixed";
-                textArea.style.left = "-9999px";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    alert('주소가 복사되었습니다. 카카오톡에 붙여넣기 해주세요.');
-                } catch (err) {
-                    alert('주소창을 복사해주세요.');
-                }
-                document.body.removeChild(textArea);
-            }
+        // 환율 계산기 로직
+        function calcKRW() {
+            const jpy = document.getElementById('jpy-input').value;
+            const krw = Math.round(jpy * 9.55); // 100엔=955원 기준
+            document.getElementById('krw-output').innerText = krw > 0 ? krw.toLocaleString() : "0";
         }
 
-        // 3. Tabs with Color Themes (Timeline)
-        function openTab(evt, tabName, color) {
+        // 탭 전환 로직
+        function openTab(evt, tabName) {
             var i, tabContent, tabBtns;
             tabContent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabContent.length; i++) {
                 tabContent[i].style.display = "none";
+                tabContent[i].classList.remove('animate-fade-in-up');
             }
             tabBtns = document.getElementsByClassName("tab-btn");
             for (i = 0; i < tabBtns.length; i++) {
                 tabBtns[i].className = tabBtns[i].className.replace(" active", "");
-                tabBtns[i].className = tabBtns[i].className.replace(/border-(blue|green|orange|purple)-200/g, "border-slate-200");
-                tabBtns[i].className = tabBtns[i].className.replace(/text-(blue|green|orange|purple)-600/g, "text-slate-600");
+                tabBtns[i].className = tabBtns[i].className.replace("bg-blue-50", "bg-white");
+                tabBtns[i].className = tabBtns[i].className.replace("text-blue-600", "text-slate-600");
             }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
             
-            evt.currentTarget.className = evt.currentTarget.className.replace("border-slate-200", "border-" + color + "-200");
-            evt.currentTarget.className = evt.currentTarget.className.replace("text-slate-600", "text-" + color + "-600");
+            const target = document.getElementById(tabName);
+            target.style.display = "block";
+            void target.offsetWidth; 
+            target.classList.add('animate-fade-in-up');
+            
+            evt.currentTarget.className += " active";
+            evt.currentTarget.className = evt.currentTarget.className.replace("bg-white", "bg-blue-50");
+            evt.currentTarget.className = evt.currentTarget.className.replace("text-slate-600", "text-blue-600");
         }
-        document.getElementById("day1").style.display = "block";
 
-        // 4. Checklist
-        const PREFIX = 'tm_Asamoa_Osaka_NEW_20260425_'; 
+        // 디테일해진 체크리스트
+        const PREFIX = 'tm_Asamoa_Osaka_Final_20260425_'; 
         const checklistData = [
-            { id: 'pass', text: '여권 (유효기간 6개월 이상 필수)' },
-            { id: 'visit', text: 'Visit Japan Web 등록 (티웨이 TW327 입력)' },
-            { id: 'ticket', text: 'E-티켓/호텔 바우처' },
-            { id: 'sim', text: '유심/로밍/포켓와이파이' },
-            { id: 'plug', text: '110v 돼지코 어댑터' },
-            { id: 'yen', text: '엔화 환전 (기사가이드 경비 4천엔 등)' },
-            { id: 'meds', text: '개인 상비약 및 우산' }
+            { id: 'pass', text: '여권 (만료일 6개월 이상, 서명란 싸인 필수)' },
+            { id: 'visit', text: 'Visit Japan Web (QR코드 화면 캡쳐본)' },
+            { id: 'ticket', text: '항공권(E-ticket) 및 여행자 보험 가입증명서' },
+            { id: 'yen', text: '엔화 (기사가이드 경비 4,000엔 + 여유분)' },
+            { id: 'meds', text: '개인 상비약 (혈압약, 소화제, 감기약, 파스 등)' },
+            { id: 'plug', text: '110V 돼지코 어댑터 (일본 220V 사용 불가)' },
+            { id: 'shoes', text: '편안한 운동화/트레킹화 (매일 만보 이상 걷기)' },
+            { id: 'clothes', text: '접이식 우산 및 가벼운 겉옷 (일교차 대비)' },
+            { id: 'coin', text: '동전 지갑 (일본은 동전 사용이 잦습니다)' },
+            { id: 'food', text: '컵라면/튜브 고추장 등 간단한 한식 (선택)' }
         ];
 
         const container = document.getElementById('checklist-container');
         checklistData.forEach(item => {
             const label = document.createElement('label');
-            label.className = 'flex items-center p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-pink-50 transition-colors cursor-pointer mb-2 select-none';
+            label.className = 'flex items-center p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-pink-50 transition-colors cursor-pointer select-none';
             label.innerHTML = `
-                <input type="checkbox" id="${item.id}" class="w-5 h-5 text-pink-600 rounded border-gray-300 focus:ring-pink-500 cursor-pointer">
-                <span class="ml-3 text-slate-700 font-medium flex-grow">${item.text}</span>
+                <input type="checkbox" id="${item.id}" class="w-5 h-5 text-pink-600 rounded border-gray-300">
+                <span class="ml-3 text-sm text-slate-700 font-bold flex-grow">${item.text}</span>
             `;
             container.appendChild(label);
             
             const checkbox = label.querySelector('input');
-            const saved = localStorage.getItem(PREFIX + item.id);
-            if (saved === 'true') { 
-                checkbox.checked = true; 
-                label.classList.add('bg-pink-50'); 
+            if (localStorage.getItem(PREFIX + item.id) === 'true') { 
+                checkbox.checked = true; label.classList.add('bg-pink-50'); 
             }
-            
             checkbox.addEventListener('change', (e) => {
                 localStorage.setItem(PREFIX + item.id, e.target.checked);
-                if(e.target.checked) label.classList.add('bg-pink-50'); 
-                else label.classList.remove('bg-pink-50');
+                e.target.checked ? label.classList.add('bg-pink-50') : label.classList.remove('bg-pink-50');
             });
         });
 
-        // 5. Auto-resizing Memo
+        // 메모장
         const memo = document.getElementById('travel-memo');
         memo.value = localStorage.getItem(PREFIX + 'memo') || '';
-        
-        const resizeTextarea = (el) => {
-            el.style.height = '150px';
-            if(el.scrollHeight > 150) { el.style.height = el.scrollHeight + 'px'; }
-        };
-        requestAnimationFrame(() => resizeTextarea(memo));
         memo.addEventListener('input', function() {
             localStorage.setItem(PREFIX + 'memo', this.value);
-            this.style.height = '150px';
-            this.style.height = this.scrollHeight + 'px';
+            this.style.height = '150px'; this.style.height = this.scrollHeight + 'px';
         });
 
-        // 6. Interactive Leaflet Map Logic (Safe Animated Solid Lines)
-        document.addEventListener('DOMContentLoaded', function() {
-            // 지도 초기화 (오사카/간사이 지역 중심)
-            var map = L.map('itinerary-map', { scrollWheelZoom: false }).setView([34.75, 135.3], 9);
-            
-            // 깔끔한 지도 타일 사용 (CartoDB Positron)
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(map);
-
-            // 커스텀 마커 아이콘 생성 함수
-            function createCustomIcon(faClass, dayClass) {
-                return L.divIcon({
-                    className: 'custom-marker-wrap',
-                    html: `<div class="custom-marker ${dayClass}" style="width: 32px; height: 32px; background: white;"><i class="${faClass}"></i></div>`,
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16],
-                    popupAnchor: [0, -16]
-                });
+        // 공유 기능
+        function shareLink() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: '[아사모아] 아침출발 오사카', url: url }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(url).then(() => alert('주소가 복사되었습니다.'));
             }
-
-            // 여행 장소 데이터 (업데이트된 아침 출발 전체 일정)
-            const locations = [
-                // 1일차 (Blue)
-                { id: 'kix1', day: 1, name: '간사이 국제공항', lat: 34.4320, lng: 135.2304, icon: 'fa-solid fa-plane-arrival', color: '#3b82f6', dayClass: 'marker-day1' },
-                { id: 'sumiyoshi', day: 1, name: '스미요시 타이샤', lat: 34.6125, lng: 135.4931, icon: 'fa-solid fa-torii-gate', color: '#3b82f6', dayClass: 'marker-day1' },
-                { id: 'osakacastle', day: 1, name: '오사카성', lat: 34.6873, lng: 135.5262, icon: 'fa-brands fa-fort-awesome-alt', color: '#3b82f6', dayClass: 'marker-day1' },
-                { id: 'dotonbori', day: 1, name: '도톤보리', lat: 34.6687, lng: 135.5013, icon: 'fa-solid fa-store', color: '#3b82f6', dayClass: 'marker-day1' },
-                { id: 'hotel1', day: 1, name: '호텔 휴식 (오사카)', lat: 34.6640, lng: 135.5870, icon: 'fa-solid fa-bed', color: '#3b82f6', dayClass: 'marker-day1' },
-                
-                // 2일차 (Green) - 기본일정인 나라/고베 기준 표시
-                { id: 'hotel1_start', day: 2, name: '오사카 출발', lat: 34.6640, lng: 135.5870, icon: 'fa-solid fa-hotel', color: '#10b981', dayClass: 'marker-day2', hiddenMarker: true },
-                { id: 'nara', day: 2, name: '나라 사슴공원 & 도다이지', lat: 34.6850, lng: 135.8320, icon: 'fa-solid fa-deer', color: '#10b981', dayClass: 'marker-day2' },
-                { id: 'kobe_brew', day: 2, name: '기쿠마사무네 양조장', lat: 34.7100, lng: 135.2630, icon: 'fa-solid fa-wine-bottle', color: '#10b981', dayClass: 'marker-day2' },
-                { id: 'kobe_port', day: 2, name: '고베 메리켄파크/하버랜드', lat: 34.6796, lng: 135.1837, icon: 'fa-solid fa-ferris-wheel', color: '#10b981', dayClass: 'marker-day2' },
-                { id: 'hotel2', day: 2, name: '호텔 휴식 (오사카 연박)', lat: 34.6640, lng: 135.5870, icon: 'fa-solid fa-bed', color: '#10b981', dayClass: 'marker-day2', hiddenMarker: true },
-
-                // 3일차 (Orange)
-                { id: 'hotel2_start', day: 3, name: '오사카 출발', lat: 34.6640, lng: 135.5870, icon: 'fa-solid fa-hotel', color: '#f59e0b', dayClass: 'marker-day3', hiddenMarker: true },
-                { id: 'kiyomizu', day: 3, name: '청수사 & 니넨자카', lat: 34.9948, lng: 135.7850, icon: 'fa-solid fa-vihara', color: '#f59e0b', dayClass: 'marker-day3' },
-                { id: 'arashiyama', day: 3, name: '아라시야마', lat: 35.0165, lng: 135.6710, icon: 'fa-brands fa-pagelines', color: '#f59e0b', dayClass: 'marker-day3' },
-                { id: 'hotel3', day: 3, name: '호텔 이동 (간사이 공항 부근)', lat: 34.4080, lng: 135.3180, icon: 'fa-solid fa-bed', color: '#f59e0b', dayClass: 'marker-day3' },
-
-                // 4일차 (Purple)
-                { id: 'hotel3_start', day: 4, name: '호텔 체크아웃', lat: 34.4080, lng: 135.3180, icon: 'fa-solid fa-hotel', color: '#8b5cf6', dayClass: 'marker-day4', hiddenMarker: true },
-                { id: 'kix2', day: 4, name: '간사이 국제공항 귀국', lat: 34.4320, lng: 135.2304, icon: 'fa-solid fa-plane-departure', color: '#8b5cf6', dayClass: 'marker-day4' }
-            ];
-
-            let markersLayer = L.layerGroup().addTo(map);
-            let linesLayer = L.layerGroup().addTo(map);
-
-            function drawMap(selectedDay) {
-                markersLayer.clearLayers();
-                linesLayer.clearLayers();
-                
-                let bounds = L.latLngBounds();
-                
-                // 일자별로 묶어서 선을 그리기 위함
-                const daysToDraw = selectedDay === 'all' ? [1, 2, 3, 4] : [parseInt(selectedDay, 10)];
-
-                daysToDraw.forEach(day => {
-                    const dayLocs = locations.filter(loc => loc.day === day);
-                    if(dayLocs.length === 0) return;
-
-                    const color = dayLocs[0].color;
-                    const latlngs = [];
-
-                    dayLocs.forEach(loc => {
-                        const latlng = [loc.lat, loc.lng];
-                        latlngs.push(latlng);
-                        bounds.extend(latlng);
-
-                        if (!loc.hiddenMarker || selectedDay !== 'all') { // 전체일정일때 겹치는 마커 정리
-                            L.marker(latlng, { icon: createCustomIcon(loc.icon, loc.dayClass) })
-                             .bindTooltip(`<b>${loc.name}</b>`, { direction: 'top', offset: [0, -10] })
-                             .addTo(markersLayer);
-                        }
-                    });
-
-                    // 경로를 그릴 수 있는 2개 이상의 좌표가 있을 경우에만 선을 그림
-                    if(latlngs.length > 1) {
-                        // 1. 하얀색 배경 실선 (가독성을 높여주고 애니메이션 적용)
-                        L.polyline(latlngs, {
-                            color: '#ffffff',
-                            weight: 7,
-                            opacity: 0.9,
-                            className: 'animated-route-line',
-                            lineCap: 'round',
-                            lineJoin: 'round'
-                        }).addTo(linesLayer);
-
-                        // 2. 컬러 실선 (실제 애니메이션 경로)
-                        L.polyline(latlngs, {
-                            color: color,
-                            weight: 4,
-                            opacity: 1.0,
-                            className: 'animated-route-line',
-                            lineCap: 'round',
-                            lineJoin: 'round'
-                        }).addTo(linesLayer);
-                    }
-                });
-
-                // 지도 영역 맞춤
-                if(Object.keys(bounds).length > 0 && bounds.isValid()){
-                    map.flyToBounds(bounds, { padding: [40, 40], duration: 1.5 });
-                }
-            }
-
-            // 초기 로드시 전체 여정 그리기
-            drawMap('all');
-
-            // 맵 필터 버튼 이벤트
-            const mapBtns = document.querySelectorAll('.map-btn');
-            mapBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Reset styling
-                    mapBtns.forEach(b => {
-                        b.classList.remove('bg-slate-800', 'text-white', 'border-slate-800');
-                        b.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
-                    });
-                    // Active styling
-                    this.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
-                    this.classList.add('bg-slate-800', 'text-white', 'border-slate-800');
-                    
-                    const day = this.getAttribute('data-day');
-                    drawMap(day);
-                });
-            });
-            
-            // Fix map issue inside hidden tabs
-            setTimeout(() => { map.invalidateSize(); }, 500);
-        });
+        }
     </script>
 </body>
 </html>
