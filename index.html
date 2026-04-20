@@ -60,11 +60,11 @@
         .map-marker-bubble {
             background: white; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             border: 2px solid #004098; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-            font-size: 14px; opacity: 0; /* JS에서 애니메이션 적용 */
+            font-size: 14px; opacity: 0; 
         }
 
         /* =========================================================
-           투어메이커 표준 일정표 (Web & Print 통합 CSS) 
+           🖨️ 인쇄 전용 CSS (결재 서류용 투어메이커 표준 양식)
            ========================================================= */
         :root {
             --tm-primary: #004098;
@@ -72,62 +72,33 @@
             --tm-bg: #f8fafc;
         }
 
-        .tm-table-container { width: 100%; overflow-x: auto; background: white; border-radius: 8px; }
-        .tm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; table-layout: fixed; min-width: 700px; border: 2px solid #1e293b; }
-        .tm-table th, .tm-table td { border: 1px solid var(--tm-border); padding: 14px 16px; vertical-align: top; }
-        .tm-table th { background-color: var(--tm-bg); color: #1e293b; font-weight: 700; text-align: center; padding: 12px; font-size: 14.5px; border: 1px solid #1e293b; }
-        .tm-table td { border: 1px solid #1e293b; }
+        /* 웹 화면에서는 프린트 전용 영역을 완벽히 숨김 */
+        @media screen {
+            #print-timeline { display: none !important; }
+        }
 
-        .tm-col-date { width: 12%; text-align: center; font-weight: 700; background-color: var(--tm-bg); vertical-align: middle; }
-        .tm-col-desc { width: 73%; }
-        .tm-col-meal { width: 15%; text-align: center; vertical-align: middle; }
-
-        .tm-day-divider td { border-top: 2px solid var(--tm-primary); }
-
-        .tm-time-flow { margin-bottom: 8px; font-weight: 500; color: #1e293b; }
-        .tm-time-tag { display: inline-block; color: var(--tm-primary); font-weight: 700; margin-right: 5px; }
-        .tm-highlight { font-weight: 700; color: #0f172a; }
-        
-        .tm-desc-list { list-style: none; margin: 8px 0; padding-left: 5px; }
-        .tm-desc-list li { position: relative; padding-left: 14px; margin-bottom: 6px; line-height: 1.6; color: #1e293b; }
-        .tm-desc-list li::before { content: '■'; font-size: 8px; position: absolute; left: 0; top: 5px; color: var(--tm-primary); }
-        
-        .tm-hotel-divider { border: 0; border-top: 1px dashed var(--tm-border); margin: 15px 0 10px 0; }
-        .tm-hotel-info { font-size: 14px; color: #0f172a; font-weight: bold;}
-        .tm-hotel-info i { color: var(--tm-primary); margin-right: 6px; }
-
-        .tm-meal-wrapper { display: flex; flex-direction: column; gap: 14px; justify-content: center; height: 100%; text-align: left; padding-left: 5px; }
-        .tm-meal-simple { display: flex; align-items: flex-start; font-size: 14px; color: #1e293b; line-height: 1.4; }
-        .tm-meal-simple strong { color: var(--tm-primary); margin-right: 4px; width: 22px; flex-shrink: 0; }
-        .tm-meal-menu { display: flex; flex-direction: column; }
-        .tm-meal-sub { font-size: 13.5px; margin-top: 2px; color: #475569; font-weight: bold; }
-
-        /* Print Display Styles */
-        .print-header-area { display: none; }
-
-        /* 🖨️ Print CSS - 결재 서류용 A4 최적화 */
+        /* 인쇄 시 레이아웃 제어 */
         @media print {
             @page { size: A4 portrait; margin: 12mm 10mm; }
             * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; print-color-adjust: exact !important; }
             body { background: white !important; color: black !important; }
             
-            /* 불필요 요소 숨김 */
-            header, footer, #home, #guide, #hotels, #map-section, .bg-slate-900, #assistant, #must-read, .no-print, .tab-btn-container, .mobile-nav, #phrase-modal { display: none !important; }
+            /* 불필요 요소 숨김 (웹 타임라인 포함) */
+            header, footer, #home, #guide, #hotels, #map-section, .bg-slate-900, #assistant, #must-read, .no-print, .tab-btn-container, .mobile-nav, #phrase-modal, #web-timeline { display: none !important; }
             
             main, #timeline { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: white !important; }
             
-            /* 프린트 전용 헤더 (표준양식 적용) */
-            .print-header-area { 
-                display: block !important; 
-                margin-bottom: 20px;
-            }
+            /* 프린트 영역 활성화 */
+            #print-timeline { display: block !important; }
+
+            /* 프린트 전용 헤더 */
             .print-header-top {
                 display: flex; justify-content: space-between; align-items: flex-end;
                 border-bottom: 2px solid var(--tm-primary); padding-bottom: 10px; margin-bottom: 20px;
             }
             .print-header-top img { height: 35px; }
             .print-doc-no { font-size: 12px; color: #555; }
-            .print-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 15px; }
+            .print-title { text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 15px; }
             
             .print-overview {
                 display: flex; justify-content: space-between;
@@ -136,46 +107,42 @@
             }
             .print-overview .label { font-weight: bold; color: var(--tm-primary); margin-right: 5px; }
 
-            /* 테이블 인쇄 최적화 */
+            /* 테이블 인쇄 최적화 (11% / 75% / 14%) */
             .tm-table-container { box-shadow: none !important; border: none !important; padding: 0 !important; overflow: visible !important;}
-            .tm-table { border: 2px solid #1e293b !important; }
-            .tm-table th { border: 1px solid #1e293b !important; background-color: #f8fafc !important; }
-            .tm-table td { border: 1px solid #1e293b !important; page-break-inside: avoid; }
+            .tm-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; border: 2px solid #1e293b !important; }
+            .tm-table th { border: 1px solid #1e293b !important; background-color: #f8fafc !important; font-weight: bold; text-align: center; padding: 8px !important; }
+            .tm-table td { border: 1px solid #1e293b !important; page-break-inside: avoid; padding: 8px 10px !important; vertical-align: top; }
+            
+            .tm-col-date { width: 11%; text-align: center; font-weight: 700; background-color: var(--tm-bg) !important; vertical-align: middle; }
+            .tm-col-desc { width: 75%; }
+            .tm-col-meal { width: 14%; text-align: center; vertical-align: middle; }
+
             tr { page-break-inside: avoid; }
             .tm-day-divider td { border-top: 2px solid #1e293b !important; }
             
-            /* 모든 탭 내용을 인쇄 시 보이게 함 */
-            .day-tbody { display: table-row-group !important; }
+            .tm-time-flow { font-size: 11px !important; margin-bottom: 4px !important; font-weight: bold; }
+            .tm-time-tag { color: var(--tm-primary); margin-right: 5px; }
+            .tm-highlight { font-weight: 700; color: #000; }
             
-            /* 여백 및 사이즈 튜닝 (1장 출력용) */
-            .tm-table th, .tm-table td { padding: 8px 10px !important; }
-            .tm-desc-list { margin: 4px 0 !important; }
-            .tm-desc-list li { margin-bottom: 4px !important; font-size: 12px !important; }
-            .tm-time-flow { font-size: 12px !important; margin-bottom: 4px !important;}
-            .tm-hotel-info { font-size: 12px !important; }
-            .tm-meal-simple { font-size: 12px !important; }
+            .tm-desc-list { list-style: none; margin: 4px 0 !important; padding-left: 5px; }
+            .tm-desc-list li { position: relative; padding-left: 12px; margin-bottom: 4px !important; line-height: 1.4; color: #000; }
+            .tm-desc-list li::before { content: '■'; font-size: 8px; position: absolute; left: 0; top: 4px; color: var(--tm-primary); }
+            
+            .tm-hotel-divider { border: 0; border-top: 1px dashed var(--tm-border); margin: 8px 0 6px 0; }
+            .tm-hotel-info { font-size: 11px !important; color: #000; font-weight: bold;}
+            .tm-hotel-info i { color: var(--tm-primary); margin-right: 4px; }
 
-            /* Footer Info */
+            .tm-meal-wrapper { display: flex; flex-direction: column; gap: 8px; justify-content: center; height: 100%; text-align: left; padding-left: 5px; }
+            .tm-meal-simple { display: flex; align-items: flex-start; font-size: 11px !important; color: #000; line-height: 1.3; }
+            .tm-meal-simple strong { color: var(--tm-primary); margin-right: 4px; width: 16px; flex-shrink: 0; }
+            .tm-meal-menu { display: flex; flex-direction: column; }
+            .tm-meal-sub { font-size: 10px; margin-top: 1px; color: #444; font-weight: bold; }
+
             .print-footer-area {
-                margin-top: 15px;
-                display: flex; justify-content: space-between; align-items: flex-end;
-                font-size: 12px; border-top: 1px solid #ccc; padding-top: 10px;
+                margin-top: 15px; display: flex; justify-content: space-between; align-items: flex-end;
+                font-size: 11px; border-top: 1px solid #ccc; padding-top: 10px;
             }
-            .print-footer-area .manager { font-weight: bold; border-left: 3px solid var(--tm-primary); padding-left: 10px; }
-        }
-
-        /* Mobile View for Table */
-        @media (max-width: 768px) {
-            .tm-table-container { border: none; padding: 0; background: transparent; }
-            .tm-table, .tm-table thead, .tm-table tbody, .tm-table th, .tm-table td, .tm-table tr { display: block; width: 100%; border: none !important; }
-            .tm-table thead { display: none; }
-            .tm-table tr { margin-bottom: 15px; border: 1px solid #e2e8f0 !important; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-            .tm-table td { padding: 15px; text-align: left; border-bottom: 1px solid #f1f5f9 !important; }
-            .tm-table td:last-child { border-bottom: none !important; }
-            .tm-col-date { background-color: var(--tm-bg); border-bottom: 2px solid var(--tm-primary) !important; text-align: left !important; display: flex; align-items: center; justify-content: space-between;}
-            .tm-col-date br { display: none; }
-            .tm-col-date::after { content: ''; }
-            .tm-meal-wrapper { flex-direction: row; gap: 15px; padding-left: 0; }
+            .print-footer-area .manager { font-weight: bold; border-left: 3px solid var(--tm-primary); padding-left: 8px; }
         }
     </style>
 </head>
@@ -349,165 +316,310 @@
             </div>
         </section>
 
-        <!-- 5. Timeline (Standard Template Structure) -->
+        <!-- 4. Timeline (Web UI + Print Form Dual Structure) -->
         <section id="timeline" class="py-16 bg-white">
             <div class="container mx-auto px-4 max-w-5xl">
                 
                 <!-- 상단 제어부 (웹 전용) -->
-                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 pb-4 print-header-hide no-print">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 pb-4 border-b border-slate-200 no-print">
                     <div class="text-center md:text-left">
                         <h2 class="text-2xl font-bold text-slate-800 m-0 border-0">상세 확정 일정표</h2>
                         <p class="text-xs text-slate-500 mt-2"><i class="fa-solid fa-circle-info mr-1"></i> 현지 사정에 따라 일정이 변동될 수 있습니다.</p>
                     </div>
                     <div class="flex flex-wrap justify-center gap-2">
-                        <button onclick="window.print()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg transition-colors shadow-md">
-                            <i class="fa-solid fa-print"></i> 일정표 인쇄 / PDF 저장 (A4 양식)
+                        <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg transition-colors shadow-md">
+                            <i class="fa-solid fa-print"></i> 일정표 인쇄 / PDF 저장 (결재 서류 양식)
                         </button>
                     </div>
                 </div>
 
-                <!-- Tabs (Hidden on print) -->
-                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 px-1 tab-btn-container no-print">
-                    <button class="tab-btn active flex-1 min-w-[80px] py-3 rounded-xl border border-blue-200 bg-blue-50 font-bold text-blue-600 text-sm shadow-sm" onclick="openTab(event, 'all')">전체일정</button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day1')">1일차<br><span class="text-xs font-normal">4/25(토)</span></button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day2')">2일차<br><span class="text-xs font-normal">4/26(일)</span></button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day3')">3일차<br><span class="text-xs font-normal">4/27(월)</span></button>
-                    <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day4')">4일차<br><span class="text-xs font-normal">4/28(화)</span></button>
-                </div>
-
-                <!-- 🖨️ 인쇄 전용 헤더 및 개요 (투어메이커 표준 양식) -->
-                <div class="print-header-area">
-                    <div class="print-header-top">
-                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="투어메이커 로고">
-                        <div class="print-doc-no">문서번호: TM-260425-QJP</div>
+                <!-- 🌐 WEB 전용 타임라인 (세로 점선 UI - 모바일 최적화) -->
+                <div id="web-timeline" class="no-print">
+                    <!-- Tabs -->
+                    <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 px-1 tab-btn-container">
+                        <button class="tab-btn active flex-1 min-w-[80px] py-3 rounded-xl border border-blue-200 bg-blue-50 font-bold text-blue-600 text-sm shadow-sm" onclick="openTab(event, 'all')">전체일정</button>
+                        <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day1')">1일차<br><span class="text-xs font-normal">4/25(토)</span></button>
+                        <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day2')">2일차<br><span class="text-xs font-normal">4/26(일)</span></button>
+                        <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day3')">3일차<br><span class="text-xs font-normal">4/27(월)</span></button>
+                        <button class="tab-btn flex-1 min-w-[80px] py-3 rounded-xl border border-slate-200 bg-white font-bold text-slate-600 text-sm shadow-sm" onclick="openTab(event, 'day4')">4일차<br><span class="text-xs font-normal">4/28(화)</span></button>
                     </div>
-                    <div class="print-title">[아사모아] 오사카의 정석-전일관광 4일 확정 일정표</div>
-                    <div class="print-overview">
-                        <div><span class="label">행사기간</span> 2026. 04. 25 (토) ~ 04. 28 (화)</div>
-                        <div><span class="label">행사인원</span> 아사모아 단체 (총 25명)</div>
-                        <div><span class="label">이용항공</span> 티웨이항공 (TW)</div>
+
+                    <div class="bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                        <!-- Web Day 1 -->
+                        <div id="day1" class="tab-content animate-fade-in-up">
+                            <div class="flex items-center justify-between mb-6 border-b pb-2">
+                                <h3 class="font-bold text-lg text-blue-800">1일차 : 4/25 (토) 오사카 전일 관광</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-blue-100 px-2 py-1 rounded hidden md:inline-block">조: 불포함 / 중: 뷔페식 / 석: 샤브샤브</span>
+                            </div>
+                            <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-6">
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-blue-500 rounded-full"></span>
+                                    <span class="text-blue-600 font-bold text-sm">10:55</span>
+                                    <p class="text-slate-800 font-bold">청주 국제공항 출발 (TW327)</p>
+                                    <p class="text-xs text-slate-500 mt-1">비행 소요시간: 1시간 45분</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <span class="text-slate-600 font-bold text-sm">12:40</span>
+                                    <p class="text-slate-800 font-bold text-blue-700">간사이 공항 도착 및 가이드(임정영) 미팅</p>
+                                    <p class="text-sm text-slate-600 mt-1">입국 수속 및 전용 차량 탑승</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-blue-700">스미요시 타이샤</p>
+                                    <p class="text-sm text-slate-600 mt-1">일본 3대 국가 중요 문화재, 아름다운 아치형 다리 관람</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-blue-700">오사카성 (천수각 불포함)</p>
+                                    <p class="text-sm text-slate-600 mt-1">오사카의 상징이자 일본 3대 명성 중 하나인 거대한 성곽</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-blue-700">신사이바시 & 도톤보리</p>
+                                    <p class="text-sm text-slate-600 mt-1">오사카 최대 상업지구와 유흥가, 글리코상 배경으로 자유 시간</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-600 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold">호텔 투숙 및 휴식</p>
+                                    <p class="text-xs text-slate-500 mt-1">확정: 사라사 호텔 신오사카 (3성급 ★★★)</p>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Web Day 2 -->
+                        <div id="day2" class="tab-content hidden animate-fade-in-up">
+                            <div class="flex items-center justify-between mb-6 border-b pb-2">
+                                <h3 class="font-bold text-lg text-green-800">2일차 : 4/26 (일) 사슴공원 & 고베항 야경</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-green-100 px-2 py-1 rounded hidden md:inline-block">조: 호텔 / 중: 일정식 / 석: 야키니쿠</span>
+                            </div>
+                            <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-6">
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-green-500 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold">호텔 조식 후 전용 차량 탑승</p>
+                                    <p class="text-xs text-red-500 mt-1 font-bold">* USJ 선택자는 유니버셜 스튜디오 경유 후 하차 (중/석식 불포함)</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-green-700">나라 사슴공원 & 동대사 (도다이지)</p>
+                                    <p class="text-sm text-slate-600 mt-1">1,000여 마리 사슴과의 교감 및 거대한 대불상이 있는 세계문화유산</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-green-700">키쿠마사무네 양조장</p>
+                                    <p class="text-sm text-slate-600 mt-1">350년 전통의 일본 양조 기술과 역사 견학</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-green-700">메리켄 파크 & 하버랜드</p>
+                                    <p class="text-sm text-slate-600 mt-1">고베 항구의 랜드마크 포트타워 조망 및 복합 쇼핑몰 야경 감상</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-green-700">사키시마청사 전망대</p>
+                                    <p class="text-sm text-slate-600 mt-1">지상 252m에서 오사카만과 도심의 탁 트인 뷰 조망</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-600 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold">오사카 호텔 귀환 및 휴식</p>
+                                    <p class="text-xs text-slate-500 mt-1">확정: 사라사 호텔 신오사카 (연박)</p>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Web Day 3 -->
+                        <div id="day3" class="tab-content hidden animate-fade-in-up">
+                            <div class="flex items-center justify-between mb-6 border-b pb-2">
+                                <h3 class="font-bold text-lg text-orange-800">3일차 : 4/27 (월) 천년 고도 교토</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-orange-100 px-2 py-1 rounded hidden md:inline-block">조: 호텔 / 중: 유두부 정식 / 석: 일정식</span>
+                            </div>
+                            <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-6">
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-orange-500 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold">호텔 조식 후 교토로 이동</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-orange-700">청수사 (기요미즈데라) 및 산넨/니넨자카</p>
+                                    <p class="text-sm text-slate-600 mt-1">절벽 위 본당 조망 및 고즈넉한 옛 일본풍 돌계단 거리 산책</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-orange-700">아라시야마 관광</p>
+                                    <p class="text-sm text-slate-600 mt-1">목조 다리 토게츠교, 대나무 숲길 치쿠린, 인연의 노노미야 신사</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-600 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold">오사카(간사이 공항 인근) 이동 및 투숙</p>
+                                    <p class="text-xs text-slate-500 mt-1">확정: 이즈미사노 센터 호텔 (3성급 ★★★)</p>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Web Day 4 -->
+                        <div id="day4" class="tab-content hidden animate-fade-in-up">
+                            <div class="flex items-center justify-between mb-6 border-b pb-2">
+                                <h3 class="font-bold text-lg text-purple-800">4일차 : 4/28 (화) 아쉬움을 뒤로하고 귀국</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-purple-100 px-2 py-1 rounded hidden md:inline-block">조: 호텔 / 중: 불포함 / 석: 불포함</span>
+                            </div>
+                            <ul class="space-y-6 border-l-2 border-slate-200 ml-2 pl-6 pb-4">
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold">호텔 조식 후 체크아웃 및 셔틀 이동</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-slate-400 rounded-full"></span>
+                                    <p class="text-slate-800 font-bold text-purple-700">알렉산더앤선 면세점 방문</p>
+                                    <p class="text-sm text-slate-600 mt-1">약 40분간 일본 특산물 및 기념품 쇼핑 (환불 가능)</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span>
+                                    <span class="text-purple-600 font-bold text-sm">13:40</span>
+                                    <p class="text-slate-800 font-bold">오사카(KIX) 출발 (TW328)</p>
+                                </li>
+                                <li class="relative">
+                                    <span class="absolute -left-[31px] top-1 w-4 h-4 bg-purple-500 rounded-full"></span>
+                                    <span class="text-slate-600 font-bold text-sm">15:20</span>
+                                    <p class="text-slate-800 font-bold">청주공항(CJJ) 도착 및 해산</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Timeline Table Structure (Standard Template) -->
-                <div class="tm-table-container">
-                    <table class="tm-table">
-                        <thead>
-                            <tr>
-                                <th class="tm-col-date">일자</th>
-                                <th class="tm-col-desc">상세 탐방 일정 및 동선 점검</th>
-                                <th class="tm-col-meal">식사</th>
-                            </tr>
-                        </thead>
-                        
-                        <!-- DAY 1 -->
-                        <tbody id="day1" class="day-tbody">
-                            <tr class="tm-day-divider">
-                                <td class="tm-col-date"><strong>1일차</strong><br>4/25 (토)</td>
-                                <td class="tm-col-desc">
-                                    <div class="tm-time-flow"><span class="tm-time-tag">10:55</span> 청주 국제공항 출발 (TW327) - 소요시간: 1시간 45분</div>
-                                    <div class="tm-time-flow"><span class="tm-time-tag">12:40</span> 간사이 국제공항 도착 및 가이드(임정영) 미팅</div>
-                                    <ul class="tm-desc-list">
-                                        <li>[전용차량] 탑승 후 오사카 지역으로 이동</li>
-                                        <li>일본 3대 국가 중요 문화재, 아름다운 아치형 다리 <span class="tm-highlight">스미요시 타이샤</span></li>
-                                        <li>오사카의 상징이자 일본 3대 명성 중 하나인 거대한 성곽 <span class="tm-highlight">오사카성</span> (천수각 불포함)</li>
-                                        <li>오사카 최대 상업지구와 유흥가, 글리코상 배경으로 자유 시간 <span class="tm-highlight">신사이바시 & 도톤보리</span></li>
-                                        <li>일정 종료 후 호텔 투숙 및 휴식</li>
-                                    </ul>
-                                    <hr class="tm-hotel-divider">
-                                    <div class="tm-hotel-info"><i class="fa-solid fa-bed"></i> <strong>호텔명 : 사라사 호텔 신오사카 (3성급)</strong></div>
-                                </td>
-                                <td class="tm-col-meal">
-                                    <div class="tm-meal-wrapper">
-                                        <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">-</div></div>
-                                        <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">뷔페식</div></div>
-                                        <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">샤브샤브<span class="tm-meal-sub">(무제한)</span></div></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                <!-- 🖨️ PRINT 전용 타임라인 (투어메이커 표준 결재 서류 양식) -->
+                <div id="print-timeline" class="hidden print:block">
+                    <div class="print-header-area">
+                        <div class="print-header-top">
+                            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="투어메이커 로고">
+                            <div class="print-doc-no">문서번호: TM-260425-QJP</div>
+                        </div>
+                        <div class="print-title">[아사모아] 오사카의 정석-전일관광 4일 확정 일정표</div>
+                        <div class="print-overview">
+                            <div><span class="label">행사기간</span> 2026. 04. 25 (토) ~ 04. 28 (화)</div>
+                            <div><span class="label">행사인원</span> 아사모아 단체 (총 25명)</div>
+                            <div><span class="label">이용항공</span> 티웨이항공 (TW)</div>
+                        </div>
+                    </div>
 
-                        <!-- DAY 2 -->
-                        <tbody id="day2" class="day-tbody">
-                            <tr class="tm-day-divider">
-                                <td class="tm-col-date"><strong>2일차</strong><br>4/26 (일)</td>
-                                <td class="tm-col-desc">
-                                    <div class="tm-time-flow"><span class="tm-time-tag">오전</span> 호텔 조식 후 전용 차량 탑승 (USJ 선택자 경유 후 하차)</div>
-                                    <ul class="tm-desc-list">
-                                        <li>1,000여 마리 사슴과의 교감 및 거대한 대불상이 있는 <span class="tm-highlight">나라 사슴공원 & 동대사(도다이지)</span></li>
-                                        <li>350년 전통의 일본 양조 기술과 역사 견학 <span class="tm-highlight">키쿠마사무네 양조장</span></li>
-                                        <li>항구의 랜드마크 포트타워 조망 및 야경 감상 <span class="tm-highlight">메리켄 파크 & 하버랜드</span></li>
-                                        <li>지상 252m에서 오사카만과 도심의 탁 트인 뷰 조망 <span class="tm-highlight">사키시마청사 전망대</span></li>
-                                        <li>모든 점검 일정 종료 후 호텔 투숙 및 휴식</li>
-                                    </ul>
-                                    <hr class="tm-hotel-divider">
-                                    <div class="tm-hotel-info"><i class="fa-solid fa-bed"></i> <strong>호텔명 : 사라사 호텔 신오사카 (연박)</strong></div>
-                                </td>
-                                <td class="tm-col-meal">
-                                    <div class="tm-meal-wrapper">
-                                        <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">호텔식</div></div>
-                                        <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">일정식</div></div>
-                                        <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">야키니쿠<span class="tm-meal-sub">(무제한)</span></div></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                    <div class="tm-table-container">
+                        <table class="tm-table">
+                            <thead>
+                                <tr>
+                                    <th class="tm-col-date">일자</th>
+                                    <th class="tm-col-desc">상세 탐방 일정 및 동선 점검</th>
+                                    <th class="tm-col-meal">식사</th>
+                                </tr>
+                            </thead>
+                            
+                            <!-- PRINT DAY 1 -->
+                            <tbody class="day-tbody">
+                                <tr class="tm-day-divider">
+                                    <td class="tm-col-date"><strong>1일차</strong><br>4/25 (토)</td>
+                                    <td class="tm-col-desc">
+                                        <div class="tm-time-flow"><span class="tm-time-tag">10:55</span> 청주 국제공항 출발 (TW327) - 소요시간: 1시간 45분</div>
+                                        <div class="tm-time-flow"><span class="tm-time-tag">12:40</span> 간사이 국제공항 도착 및 가이드(임정영) 미팅</div>
+                                        <ul class="tm-desc-list">
+                                            <li>[전용차량] 탑승 후 오사카 지역으로 이동</li>
+                                            <li>일본 3대 국가 중요 문화재, 아름다운 아치형 다리 <span class="tm-highlight">스미요시 타이샤</span></li>
+                                            <li>오사카의 상징이자 일본 3대 명성 중 하나인 거대한 성곽 <span class="tm-highlight">오사카성</span> (천수각 불포함)</li>
+                                            <li>오사카 최대 상업지구와 유흥가, 글리코상 배경으로 자유 시간 <span class="tm-highlight">신사이바시 & 도톤보리</span></li>
+                                            <li>일정 종료 후 호텔 투숙 및 휴식</li>
+                                        </ul>
+                                        <hr class="tm-hotel-divider">
+                                        <div class="tm-hotel-info"><i class="fa-solid fa-bed"></i> <strong>호텔명 : 사라사 호텔 신오사카 (3성급)</strong></div>
+                                    </td>
+                                    <td class="tm-col-meal">
+                                        <div class="tm-meal-wrapper">
+                                            <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">-</div></div>
+                                            <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">뷔페식</div></div>
+                                            <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">샤브샤브<span class="tm-meal-sub">(무제한)</span></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
 
-                        <!-- DAY 3 -->
-                        <tbody id="day3" class="day-tbody">
-                            <tr class="tm-day-divider">
-                                <td class="tm-col-date"><strong>3일차</strong><br>4/27 (월)</td>
-                                <td class="tm-col-desc">
-                                    <div class="tm-time-flow"><span class="tm-time-tag">오전</span> 호텔 조식 후 교토로 이동</div>
-                                    <ul class="tm-desc-list">
-                                        <li>절벽 위 본당 조망, 쿄토 시내 절경 감상 <span class="tm-highlight">청수사 (기요미즈데라)</span></li>
-                                        <li>고즈넉한 옛 일본풍 돌계단 거리 산책 <span class="tm-highlight">산넨자카 & 니넨자카</span></li>
-                                        <li>가쓰라강 위 목조 다리 <span class="tm-highlight">아라시야마 토게츠교</span></li>
-                                        <li>고요한 대나무 숲길과 인연의 신사 <span class="tm-highlight">치쿠린 & 노노미야 신사</span></li>
-                                        <li>일정 종료 후 간사이 공항 인근으로 이동 및 투숙</li>
-                                    </ul>
-                                    <hr class="tm-hotel-divider">
-                                    <div class="tm-hotel-info"><i class="fa-solid fa-bed"></i> <strong>호텔명 : 이즈미사노 센터 호텔 (3성급)</strong></div>
-                                </td>
-                                <td class="tm-col-meal">
-                                    <div class="tm-meal-wrapper">
-                                        <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">호텔식</div></div>
-                                        <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">유두부<span class="tm-meal-sub">(정식)</span></div></div>
-                                        <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">일정식</div></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                            <!-- PRINT DAY 2 -->
+                            <tbody class="day-tbody">
+                                <tr class="tm-day-divider">
+                                    <td class="tm-col-date"><strong>2일차</strong><br>4/26 (일)</td>
+                                    <td class="tm-col-desc">
+                                        <div class="tm-time-flow"><span class="tm-time-tag">오전</span> 호텔 조식 후 전용 차량 탑승 (USJ 선택자 경유 후 하차)</div>
+                                        <ul class="tm-desc-list">
+                                            <li>1,000여 마리 사슴과의 교감 및 거대한 대불상이 있는 <span class="tm-highlight">나라 사슴공원 & 동대사(도다이지)</span></li>
+                                            <li>350년 전통의 일본 양조 기술과 역사 견학 <span class="tm-highlight">키쿠마사무네 양조장</span></li>
+                                            <li>항구의 랜드마크 포트타워 조망 및 야경 감상 <span class="tm-highlight">메리켄 파크 & 하버랜드</span></li>
+                                            <li>지상 252m에서 오사카만과 도심의 탁 트인 뷰 조망 <span class="tm-highlight">사키시마청사 전망대</span></li>
+                                            <li>모든 점검 일정 종료 후 호텔 투숙 및 휴식</li>
+                                        </ul>
+                                        <hr class="tm-hotel-divider">
+                                        <div class="tm-hotel-info"><i class="fa-solid fa-bed"></i> <strong>호텔명 : 사라사 호텔 신오사카 (연박)</strong></div>
+                                    </td>
+                                    <td class="tm-col-meal">
+                                        <div class="tm-meal-wrapper">
+                                            <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">호텔식</div></div>
+                                            <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">일정식</div></div>
+                                            <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">야키니쿠<span class="tm-meal-sub">(무제한)</span></div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
 
-                        <!-- DAY 4 -->
-                        <tbody id="day4" class="day-tbody">
-                            <tr class="tm-day-divider">
-                                <td class="tm-col-date"><strong>4일차</strong><br>4/28 (화)</td>
-                                <td class="tm-col-desc">
-                                    <div class="tm-time-flow"><span class="tm-time-tag">오전</span> 호텔 조식 후 체크아웃 및 셔틀 이동</div>
-                                    <ul class="tm-desc-list">
-                                        <li>일본 특산물 및 기념품 쇼핑 (약 40분) <span class="tm-highlight">알렉산더앤선 면세점</span></li>
-                                        <li>모든 일정 종료 후 간사이 국제공항으로 이동</li>
-                                    </ul>
-                                    <div class="tm-time-flow" style="margin-top: 10px;"><span class="tm-time-tag">13:40</span> 오사카 간사이공항 출발 (TW328)</div>
-                                    <div class="tm-time-flow"><span class="tm-time-tag">15:20</span> 청주 국제공항 도착 후 해산</div>
-                                </td>
-                                <td class="tm-col-meal">
-                                    <div class="tm-meal-wrapper">
-                                        <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">호텔식</div></div>
-                                        <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">-</div></div>
-                                        <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">-</div></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            <!-- PRINT DAY 3 -->
+                            <tbody class="day-tbody">
+                                <tr class="tm-day-divider">
+                                    <td class="tm-col-date"><strong>3일차</strong><br>4/27 (월)</td>
+                                    <td class="tm-col-desc">
+                                        <div class="tm-time-flow"><span class="tm-time-tag">오전</span> 호텔 조식 후 교토로 이동</div>
+                                        <ul class="tm-desc-list">
+                                            <li>절벽 위 본당 조망, 쿄토 시내 절경 감상 <span class="tm-highlight">청수사 (기요미즈데라)</span></li>
+                                            <li>고즈넉한 옛 일본풍 돌계단 거리 산책 <span class="tm-highlight">산넨자카 & 니넨자카</span></li>
+                                            <li>가쓰라강 위 목조 다리 <span class="tm-highlight">아라시야마 토게츠교</span></li>
+                                            <li>고요한 대나무 숲길과 인연의 신사 <span class="tm-highlight">치쿠린 & 노노미야 신사</span></li>
+                                            <li>일정 종료 후 간사이 공항 인근으로 이동 및 투숙</li>
+                                        </ul>
+                                        <hr class="tm-hotel-divider">
+                                        <div class="tm-hotel-info"><i class="fa-solid fa-bed"></i> <strong>호텔명 : 이즈미사노 센터 호텔 (3성급)</strong></div>
+                                    </td>
+                                    <td class="tm-col-meal">
+                                        <div class="tm-meal-wrapper">
+                                            <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">호텔식</div></div>
+                                            <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">유두부<span class="tm-meal-sub">(정식)</span></div></div>
+                                            <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">일정식</div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
 
-                <!-- 🖨️ 인쇄 전용 푸터 (투어메이커 표준 양식) -->
-                <div class="print-footer-area">
-                    <div>※ 상기 일정은 현지 사정 및 항공 상황에 따라 다소 변경될 수 있습니다.</div>
-                    <div class="manager">담당자 : 이재명 033-562-2551</div>
+                            <!-- PRINT DAY 4 -->
+                            <tbody class="day-tbody">
+                                <tr class="tm-day-divider">
+                                    <td class="tm-col-date"><strong>4일차</strong><br>4/28 (화)</td>
+                                    <td class="tm-col-desc">
+                                        <div class="tm-time-flow"><span class="tm-time-tag">오전</span> 호텔 조식 후 체크아웃 및 셔틀 이동</div>
+                                        <ul class="tm-desc-list">
+                                            <li>일본 특산물 및 기념품 쇼핑 (약 40분) <span class="tm-highlight">알렉산더앤선 면세점</span></li>
+                                            <li>모든 일정 종료 후 간사이 국제공항으로 이동</li>
+                                        </ul>
+                                        <div class="tm-time-flow" style="margin-top: 10px;"><span class="tm-time-tag">13:40</span> 오사카 간사이공항 출발 (TW328)</div>
+                                        <div class="tm-time-flow"><span class="tm-time-tag">15:20</span> 청주 국제공항 도착 후 해산</div>
+                                    </td>
+                                    <td class="tm-col-meal">
+                                        <div class="tm-meal-wrapper">
+                                            <div class="tm-meal-simple"><strong>조:</strong><div class="tm-meal-menu">호텔식</div></div>
+                                            <div class="tm-meal-simple"><strong>중:</strong><div class="tm-meal-menu">-</div></div>
+                                            <div class="tm-meal-simple"><strong>석:</strong><div class="tm-meal-menu">-</div></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="print-footer-area">
+                        <div>※ 상기 일정은 현지 사정 및 항공 상황에 따라 다소 변경될 수 있습니다.</div>
+                        <div class="manager">담당자 : 이재명 033-562-2551</div>
+                    </div>
                 </div>
 
             </div>
@@ -779,7 +891,7 @@
         function updateDday() {
             const startDate = new Date('2026-04-25T00:00:00');
             const endDate = new Date('2026-04-28T23:59:59');
-            const today = new Date(); // System time (2026-04-20 assumed)
+            const today = new Date(); 
             
             const badge = document.getElementById('d-day-badge');
             const heroTitle = document.getElementById('hero-title');
@@ -813,7 +925,7 @@
         }
         updateDday();
 
-        // --- 2. Weather API 연동 (Open-Meteo - 오사카) ---
+        // --- 2. Weather API 연동 ---
         async function fetchOsakaWeather() {
             try {
                 const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.6937&longitude=135.5022&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo');
@@ -857,7 +969,7 @@
         }
         fetchOsakaWeather();
 
-        // --- 3. Exchange Rate & 5 Item Price Comparison ---
+        // --- 3. Exchange Rate & Price Comparison ---
         let currentExchangeRate = 9.55; 
 
         async function fetchExchangeRate() {
@@ -865,7 +977,6 @@
                 const response = await fetch('https://open.er-api.com/v6/latest/JPY');
                 const data = await response.json();
                 if(data && data.rates && data.rates.KRW) {
-                    // 체감환율: 매매기준율 * 1.015
                     currentExchangeRate = data.rates.KRW * 1.015;
                     const ratePer100 = Math.round(currentExchangeRate * 100);
                     document.getElementById('exchange-rate-display').innerText = `100엔 = 약 ${ratePer100.toLocaleString()}원`;
@@ -941,27 +1052,32 @@
             
             display.classList.remove('hidden');
             display.classList.add('flex');
-            // Scroll to bottom of modal
             document.getElementById('phrase-modal-content').querySelector('div.overflow-y-auto')?.scrollTo(0, 1000);
         }
 
-        // --- 5. Timeline Tabs (전체일정 추가 및 테이블 제어) ---
+        // --- 5. Timeline Tabs (Web 전용 타임라인 제어) ---
         function openTab(evt, tabName) {
             var i, tabContent, tabBtns;
-            tabContent = document.getElementsByClassName("day-tbody");
-            
+            tabContent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabContent.length; i++) {
-                if(tabName === 'all') {
-                    tabContent[i].style.display = "table-row-group";
-                } else {
-                    if(tabContent[i].id === tabName) {
-                        tabContent[i].style.display = "table-row-group";
-                    } else {
-                        tabContent[i].style.display = "none";
-                    }
-                }
+                tabContent[i].style.display = "none";
+                tabContent[i].classList.remove('animate-fade-in-up');
             }
             
+            if (tabName === 'all') {
+                for (i = 0; i < tabContent.length; i++) {
+                    tabContent[i].style.display = "block";
+                    tabContent[i].classList.add('animate-fade-in-up');
+                }
+            } else {
+                const target = document.getElementById(tabName);
+                if (target) {
+                    target.style.display = "block";
+                    void target.offsetWidth; 
+                    target.classList.add('animate-fade-in-up');
+                }
+            }
+
             tabBtns = document.getElementsByClassName("tab-btn");
             for (i = 0; i < tabBtns.length; i++) {
                 tabBtns[i].className = tabBtns[i].className.replace(" active", "");
@@ -976,9 +1092,8 @@
             }
         }
 
-        // --- 6. Leaflet Map (전체일정 추가 + 날짜별 고유 실선 컬러 매핑 적용) ---
+        // --- 6. Leaflet Map ---
         let map, currentLayerGroup;
-        // 일자별 컬러 (1일차:파랑, 2일차:초록, 3일차:주황, 4일차:보라)
         const dayColors = { 1: '#2563eb', 2: '#16a34a', 3: '#ea580c', 4: '#9333ea' };
 
         const itineraryData = {
@@ -1015,11 +1130,10 @@
                 attribution: '&copy; OpenStreetMap &copy; CARTO'
             }).addTo(map);
             currentLayerGroup = L.layerGroup().addTo(map);
-            showMapDay('all'); // 시작을 전체일정으로 표시
+            showMapDay('all');
         }
 
         function showMapDay(day) {
-            // 버튼 상태 업데이트
             const btns = document.getElementsByClassName("map-tab-btn");
             for(let i=0; i<btns.length; i++) {
                 btns[i].className = btns[i].className.replace("bg-slate-800 text-white", "bg-slate-100 text-slate-600 hover:bg-slate-200");
@@ -1031,7 +1145,6 @@
                 activeBtn.className = activeBtn.className.replace("bg-slate-100 text-slate-600 hover:bg-slate-200", "bg-slate-800 text-white");
             }
 
-            // 규칙 4: 탭 전환 시 clearLayers 필수
             currentLayerGroup.clearLayers();
             
             const daysToShow = day === 'all' ? [1, 2, 3, 4] : [day];
@@ -1044,7 +1157,6 @@
                 const latlngs = points.map(p => [p.lat, p.lng]);
                 allLatLngs = allLatLngs.concat(latlngs);
                 
-                // 규칙 1 & 5: 마커 L.divIcon html 내부 CSS 애니메이션 & 이모지 핀셋 + hover 툴팁
                 points.forEach((p, idx) => {
                     const icon = L.divIcon({
                         className: 'map-marker-container',
@@ -1058,17 +1170,15 @@
                      .addTo(currentLayerGroup);
                 });
 
-                // 점선(dashArray) 제외, 고유 색상 실선(Solid) 폴리라인 (동선) 추가
                 const polyline = L.polyline(latlngs, {color: dayColors[d], weight: 4}).addTo(currentLayerGroup);
 
-                // 규칙 3: 선 애니메이션
                 setTimeout(() => {
                     const path = polyline._path;
                     if(path) {
                         const length = path.getTotalLength();
                         path.style.strokeDasharray = length;
                         path.style.strokeDashoffset = length;
-                        path.getBoundingClientRect(); // 강제 리플로우
+                        path.getBoundingClientRect();
                         path.style.transition = 'stroke-dashoffset 2s ease-in-out';
                         path.style.strokeDashoffset = '0';
                         
@@ -1079,13 +1189,11 @@
                 }, 300);
             });
 
-            // 규칙 2: fitBounds 직후 안정화를 위한 대기
             if (allLatLngs.length > 0) {
                 map.fitBounds(L.latLngBounds(allLatLngs), {padding: [30, 30]});
             }
         }
 
-        // 문서 로드 완료 시 맵 초기화
         document.addEventListener("DOMContentLoaded", function() {
             initMap();
         });
