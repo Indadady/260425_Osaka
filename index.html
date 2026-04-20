@@ -165,6 +165,9 @@
                 </div>
 
                 <div class="flex items-center gap-2">
+                    <a href="https://www.modetour.com/package/97327471?MLoc=99&Pnum=97327471&ANO=7900804&sno=C1091311&thru=crs" target="_blank" class="text-slate-500 hover:text-blue-600 transition-colors p-2" title="모두투어 원문보기">
+                        <i class="fa-solid fa-file-lines text-xl"></i>
+                    </a>
                     <button onclick="shareLink()" class="text-slate-500 hover:text-pink-600 transition-colors p-2 active:scale-90 transform" title="공유하기">
                         <i class="fa-solid fa-share-nodes text-xl"></i>
                     </button>
@@ -186,9 +189,16 @@
                     아사모아와 함께 떠나는<br>오사카의 정석 4일
                 </h1>
 
-                <p id="hero-date" class="text-base md:text-lg text-slate-200 mb-8 font-light tracking-wide bg-black/40 px-4 py-2 rounded-lg backdrop-blur-sm inline-block">
+                <p id="hero-date" class="text-base md:text-lg text-slate-200 mb-6 font-light tracking-wide bg-black/40 px-4 py-2 rounded-lg backdrop-blur-sm inline-block">
                     2026.04.25 (토) - 04.28 (화) | <span class="text-yellow-300 font-bold">아침 출발 (티웨이항공)</span>
                 </p>
+
+                <!-- 모두투어 원문보기 링크 추가 -->
+                <div class="flex justify-center mb-8 no-print animate-fade-in-up">
+                    <a href="https://www.modetour.com/package/97327471?MLoc=99&Pnum=97327471&ANO=7900804&sno=C1091311&thru=crs" target="_blank" class="bg-blue-600/90 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-full shadow-lg transition-colors border border-white/20 backdrop-blur-md flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines"></i> 모두투어 원문 일정표 보기
+                    </a>
+                </div>
 
                 <div id="highlights" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mb-10 no-print">
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-3 flex flex-col items-center justify-center">
@@ -815,9 +825,16 @@
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-12 text-center text-sm border-t border-slate-800 no-print">
         <div class="container mx-auto px-4">
-            <a href="https://tourmaker.kr" target="_blank" class="inline-block bg-pink-700 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full mb-8 transition-colors shadow-lg">
-                <i class="fa-solid fa-globe mr-2"></i>투어메이커 홈페이지
-            </a>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-3 mb-8">
+                <a href="https://www.modetour.com/package/97327471?MLoc=99&Pnum=97327471&ANO=7900804&sno=C1091311&thru=crs" target="_blank" class="w-full md:w-auto inline-block bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                    <i class="fa-solid fa-file-lines mr-2"></i>모두투어 원문보기
+                </a>
+                <a href="https://tourmaker.kr" target="_blank" class="w-full md:w-auto inline-block bg-pink-700 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                    <i class="fa-solid fa-globe mr-2"></i>투어메이커 홈페이지
+                </a>
+            </div>
+
             <div class="flex justify-center items-center gap-6 mb-8 opacity-80">
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker" class="h-6 w-auto grayscale hover:grayscale-0 transition">
                 <span class="text-xl text-slate-600 font-light">|</span>
